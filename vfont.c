@@ -27,70 +27,113 @@
 
 
 
+#define VFONT_7SEG_A { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = -4 }
+#define VFONT_7SEG_B { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 0 }
+#define VFONT_7SEG_C { .x1 = 4, .y1 = 0, .x2 = 4, .y2 = 4 }
+#define VFONT_7SEG_D { .x1 = -4, .y1 = 4, .x2 = 4, .y2 = 4 }
+#define VFONT_7SEG_E { .x1 = -4, .y1 = 0, .x2 = -4, .y2 = 4 }
+#define VFONT_7SEG_F { .x1 = -4, .y1 = -4, .x2 = -4, .y2 = 0 }
+#define VFONT_7SEG_G { .x1 = -4, .y1 = 0, .x2 = 4, .y2 = 0 }
+#define VFONT_7SEG_EF { .x1 = -4, .y1 = -4, .x2 = -4, .y2 = 4 }
+#define VFONT_7SEG_BC { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 4 }
+
+
+#define VFONT_16SEG_1 { .x1 = -4, .y1 = -4, .x2 = 0, .y2 = -4 }
+#define VFONT_16SEG_2 { .x1 = 0, .y1 = -4, .x2 = 0, .y2 = 0 }
+#define VFONT_16SEG_3 { .x1 = -4, .y1 = -4, .x2 = 0, .y2 = 0 }
+#define VFONT_16SEG_4 VFONT_7SEG_F
+#define VFONT_16SEG_5 { .x1 = -4, .y1 = 0, .x2 = 0, .y2 = 0 }
+#define VFONT_16SEG_6 { .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 4 }
+#define VFONT_16SEG_7 { .x1 = 0, .y1 = 0, .x2 = -4, .y2 = 4 }
+#define VFONT_16SEG_8 VFONT_7SEG_E
+#define VFONT_16SEG_9 { .x1 = -4, .y1 = 4, .x2 = 0, .y2 = 4 }
+#define VFONT_16SEG_10 { .x1 = 0, .y1 = 4, .x2 = 4, .y2 = 4 }
+#define VFONT_16SEG_11 VFONT_7SEG_C
+#define VFONT_16SEG_12 { .x1 = 0, .y1 = 0, .x2 = 4, .y2 = 4 }
+#define VFONT_16SEG_13 { .x1 = 0, .y1 = 0, .x2 = 4, .y2 = 0 }
+#define VFONT_16SEG_14 VFONT_7SEG_B
+#define VFONT_16SEG_15 VFONT_7SEG_G
+#define VFONT_16SEG_16 VFONT_7SEG_B
+#define VFONT_16SEG_17 { .x1 = 0, .y1 = 0, .x2 = 4, .y2 = -4 }
+#define VFONT_16SEG_18 { .x1 = 0, .y1 = -4, .x2 = 4, .y2 = -4 }
+
+#define VFONT_16SEG_2_6 { .x1 = 0, .y1 = -4, .x2 = 0, .y2 = 4 }
+#define VFONT_16SEG_3_14 { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = 4 }
+#define VFONT_16SEG_5_15 VFONT_7SEG_G
+#define VFONT_16SEG_7_17 { .x1 = -4, .y1 = 4, .x2 = 4, .y2 = -4 }
+
+#define VFONT_16SEG_1_18 VFONT_7SEG_A
+#define VFONT_16SEG_4_8 VFONT_7SEG_EF
+#define VFONT_16SEG_9_10 VFONT_7SEG_D
+#define VFONT_16SEG_13_16 VFONT_7SEG_BC
+
+
+
 VedgeLines vfont_ascii_lines_space = { .length = 0, .lines = {}};
 VedgeLines vfont_ascii_lines_exclamation = { .length = 2, .lines = { { .x1 = 0, .y1 = -4, .x2 = 0, .y2 = 2 }, { .x1 = 0, .y1 = 3, .x2 = 0, .y2 = 4 } } };
-VedgeLines vfont_ascii_lines_quotation = {0};
-VedgeLines vfont_ascii_lines_hash = {0};
-VedgeLines vfont_ascii_lines_dollar = {0};
-VedgeLines vfont_ascii_lines_percent = {0};
-VedgeLines vfont_ascii_lines_ampersand = {0};
-VedgeLines vfont_ascii_lines_apostrophe = {0};
-VedgeLines vfont_ascii_lines_left_parenthesis = {0};
-VedgeLines vfont_ascii_lines_right_parenthesis = {0};
-VedgeLines vfont_ascii_lines_asterisk = {0};
-VedgeLines vfont_ascii_lines_plus = {0};
-VedgeLines vfont_ascii_lines_comma = {0};
-VedgeLines vfont_ascii_lines_hyphen = {0};
-VedgeLines vfont_ascii_lines_full_stop = {0};
-VedgeLines vfont_ascii_lines_slash = {0};
-VedgeLines vfont_ascii_lines_0 = { .length = 4, .lines = { { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 4 }, { .x1 = 4, .y1 = 4, .x2 = -4, .y2 = 4 }, { .x1 = -4, .y1 = 4, .x2 = -4, .y2 = -4 } } };
-VedgeLines vfont_ascii_lines_1 = { .length = 1, .lines = { { .x1 = 0, .y1 = -4, .x2 = 0, .y2 = 4 } } };
-VedgeLines vfont_ascii_lines_2 = { .length = 5, .lines = { { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 0 }, { .x1 = 4, .y1 = 0, .x2 = -4, .y2 = 0 }, { .x1 = -4, .y1 = 0, .x2 = -4, .y2 = 4 }, { .x1 = -4, .y1 = 4, .x2 = 4, .y2 = 4 } } };
-VedgeLines vfont_ascii_lines_3 = { .length = 4, .lines = { { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 4 }, { .x1 = 4, .y1 = 4, .x2 = -4, .y2 = 4 }, { .x1 = -4, .y1 = 0, .x2 = 4, .y2 = 0 } } };
-VedgeLines vfont_ascii_lines_4 = { .length = 3, .lines = { { .x1 = -4, .y1 = -4, .x2 = -4, .y2 = 0 }, { .x1 = -4, .y1 = 0, .x2 = 4, .y2 = 0 }, { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 4 } } };
-VedgeLines vfont_ascii_lines_5 = { .length = 5, .lines = { { .x1 = 4, .y1 = -4, .x2 = -4, .y2 = -4 }, { .x1 = -4, .y1 = -4, .x2 = -4, .y2 = 0 }, { .x1 = -4, .y1 = 0, .x2 = 4, .y2 = 0 }, { .x1 = 4, .y1 = 0, .x2 = 4, .y2 = 4 }, { .x1 = 4, .y1 = 4, .x2 = -4, .y2 = 4 } } };
-VedgeLines vfont_ascii_lines_6 = { .length = 5, .lines = { { .x1 = 4, .y1 = -4, .x2 = -4, .y2 = -4 }, { .x1 = -4, .y1 = -4, .x2 = -4, .y2 = 4 }, { .x1 = -4, .y1 = 4, .x2 = 4, .y2 = 4 }, { .x1 = 4, .y1 = 4, .x2 = 4, .y2 = 0 }, { .x1 = 4, .y1 = 0, .x2 = -4, .y2 = 0 } } };
-VedgeLines vfont_ascii_lines_7 = { .length = 2, .lines = { { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 4 } } };
-VedgeLines vfont_ascii_lines_8 = { .length = 5, .lines = { { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 4 }, { .x1 = 4, .y1 = 4, .x2 = -4, .y2 = 4 }, { .x1 = -4, .y1 = 4, .x2 = -4, .y2 = -4 }, { .x1 = -4, .y1 = 0, .x2 = 4, .y2 = 0 } } };
-VedgeLines vfont_ascii_lines_9 = { .length = 4, .lines = { { .x1 = 4, .y1 = 0, .x2 = -4, .y2 = 0 }, { .x1 = -4, .y1 = 0, .x2 = -4, .y2 = -4 }, { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = 4, .y2 = 4 } } };
-VedgeLines vfont_ascii_lines_colon = {0};
-VedgeLines vfont_ascii_lines_semicolon = {0};
-VedgeLines vfont_ascii_lines_less_than = {0};
-VedgeLines vfont_ascii_lines_equal = {0};
-VedgeLines vfont_ascii_lines_greater_than = {0};
-VedgeLines vfont_ascii_lines_question = {0};
-VedgeLines vfont_ascii_lines_at = {0};
-VedgeLines vfont_ascii_lines_A = {0};
-VedgeLines vfont_ascii_lines_B = {0};
-VedgeLines vfont_ascii_lines_C = {0};
-VedgeLines vfont_ascii_lines_D = {0};
-VedgeLines vfont_ascii_lines_E = {0};
-VedgeLines vfont_ascii_lines_F = {0};
-VedgeLines vfont_ascii_lines_G = {0};
-VedgeLines vfont_ascii_lines_H = {0};
-VedgeLines vfont_ascii_lines_I = {0};
-VedgeLines vfont_ascii_lines_J = {0};
-VedgeLines vfont_ascii_lines_K = {0};
-VedgeLines vfont_ascii_lines_L = {0};
-VedgeLines vfont_ascii_lines_M = {0};
-VedgeLines vfont_ascii_lines_O = {0};
-VedgeLines vfont_ascii_lines_P = {0};
-VedgeLines vfont_ascii_lines_Q = {0};
-VedgeLines vfont_ascii_lines_R = {0};
-VedgeLines vfont_ascii_lines_S = {0};
-VedgeLines vfont_ascii_lines_T = {0};
-VedgeLines vfont_ascii_lines_U = {0};
-VedgeLines vfont_ascii_lines_V = {0};
-VedgeLines vfont_ascii_lines_W = {0};
-VedgeLines vfont_ascii_lines_X = {0};
-VedgeLines vfont_ascii_lines_Y = {0};
-VedgeLines vfont_ascii_lines_Z = {0};
-VedgeLines vfont_ascii_lines_left_square = {0};
-VedgeLines vfont_ascii_lines_backslash = {0};
-VedgeLines vfont_ascii_lines_right_square = {0};
-VedgeLines vfont_ascii_lines_circumlex = {0};
-VedgeLines vfont_ascii_lines_underscore = {0};
-VedgeLines vfont_ascii_lines_undefined = {0};
+VedgeLines vfont_ascii_lines_quotation = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_hash = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_dollar = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_percent = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_ampersand = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_apostrophe = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_left_parenthesis = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_right_parenthesis = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_asterisk = { .length = 4, .lines = { VFONT_16SEG_2_6, VFONT_16SEG_3_14, VFONT_16SEG_5_15, VFONT_16SEG_7_17 } };
+VedgeLines vfont_ascii_lines_plus = { .length = 2, .lines = { VFONT_16SEG_2_6, VFONT_16SEG_5_15 } };
+VedgeLines vfont_ascii_lines_comma = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_hyphen = { .length = 1, .lines = { VFONT_16SEG_5_15 } };
+VedgeLines vfont_ascii_lines_full_stop = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_slash = { .length = 1, .lines = { VFONT_16SEG_7_17 } };
+VedgeLines vfont_ascii_lines_0 = { .length = 4, .lines = { VFONT_7SEG_A, VFONT_7SEG_BC, VFONT_7SEG_D, VFONT_7SEG_EF } };
+VedgeLines vfont_ascii_lines_1 = { .length = 1, .lines = { VFONT_16SEG_2_6 } };
+VedgeLines vfont_ascii_lines_2 = { .length = 5, .lines = { VFONT_7SEG_A, VFONT_7SEG_B, VFONT_7SEG_D, VFONT_7SEG_E, VFONT_7SEG_G  } };
+VedgeLines vfont_ascii_lines_3 = { .length = 4, .lines = { VFONT_7SEG_A, VFONT_7SEG_BC, VFONT_7SEG_D, VFONT_7SEG_G } };
+VedgeLines vfont_ascii_lines_4 = { .length = 3, .lines = { VFONT_7SEG_BC, VFONT_7SEG_F, VFONT_7SEG_G } };
+VedgeLines vfont_ascii_lines_5 = { .length = 5, .lines = { VFONT_7SEG_A, VFONT_7SEG_C, VFONT_7SEG_D, VFONT_7SEG_F, VFONT_7SEG_G } };
+VedgeLines vfont_ascii_lines_6 = { .length = 5, .lines = { VFONT_7SEG_A, VFONT_7SEG_C, VFONT_7SEG_D, VFONT_7SEG_EF, VFONT_7SEG_G } };
+VedgeLines vfont_ascii_lines_7 = { .length = 2, .lines = { VFONT_7SEG_A, VFONT_7SEG_BC } };
+VedgeLines vfont_ascii_lines_8 = { .length = 5, .lines = { VFONT_7SEG_A, VFONT_7SEG_BC, VFONT_7SEG_D, VFONT_7SEG_EF, VFONT_7SEG_G } };
+VedgeLines vfont_ascii_lines_9 = { .length = 4, .lines = { VFONT_7SEG_A, VFONT_7SEG_BC, VFONT_7SEG_F, VFONT_7SEG_G } };
+VedgeLines vfont_ascii_lines_colon = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_semicolon = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_less_than = { .length = 2, .lines = { { .x1 = -4, .y1 = 0, .x2 = 4, .y2 = -4 }, { .x1 = -4, .y1 = 0, .x2 = 4, .y2 = 4 }  } };
+VedgeLines vfont_ascii_lines_equal = { .length = 2, .lines = { { .x1 = -4, .y1 = -1, .x2 = 4, .y2 = -1 }, { .x1 = -4, .y1 = 1, .x2 = 4, .y2 = 1 } } };
+VedgeLines vfont_ascii_lines_greater_than = { .length = 2, .lines = { { .x1 = -4, .y1 = -4, .x2 = 4, .y2 = 0 }, { .x1 = -4, .y1 = 4, .x2 = 4, .y2 = 0 } } };
+VedgeLines vfont_ascii_lines_question = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_at = { .length = 8, .lines = { { .x1 = 2, .y1 = 2, .x2 = 2, .y2 = -2 }, { .x1 = 2, .y1 = -2, .x2 = -2, .y2 = -2 }, { .x1 = -2, .y1 = -2, .x2 = -2, .y2 = 2 }, { .x1 = -2, .y1 = 2, .x2 = 4, .y2 = 2 }, { .x1 = 4, .y1 = 2, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = -4, .y2 = -4 }, { .x1 = -4, .y1 = -4, .x2 = -4, .y2 = 4 }, { .x1 = -4, .y1 = 4, .x2 = 4, .y2 = 4 } } };
+VedgeLines vfont_ascii_lines_A = { .length = 4, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4_8, VFONT_16SEG_5_15, VFONT_16SEG_13_16 } };
+VedgeLines vfont_ascii_lines_B = { .length = 5, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_2_6, VFONT_16SEG_9_10, VFONT_16SEG_13_16, VFONT_16SEG_15 } };
+VedgeLines vfont_ascii_lines_C = { .length = 3, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4_8, VFONT_16SEG_9_10 } };
+VedgeLines vfont_ascii_lines_D = { .length = 4, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_2_6, VFONT_16SEG_9_10, VFONT_16SEG_13_16 } };
+VedgeLines vfont_ascii_lines_E = { .length = 4, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4_8, VFONT_16SEG_5, VFONT_16SEG_9_10 } };
+VedgeLines vfont_ascii_lines_F = { .length = 3, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4_8, VFONT_16SEG_5 } };
+VedgeLines vfont_ascii_lines_G = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_H = { .length = 3, .lines = { VFONT_16SEG_4_8, VFONT_16SEG_5_15, VFONT_16SEG_13_16 } };
+VedgeLines vfont_ascii_lines_I = { .length = 3, .lines = {  } };
+VedgeLines vfont_ascii_lines_J = { .length = 0, .lines = {  } };
+VedgeLines vfont_ascii_lines_K = {0};//{ .length = 3, .lines = { , VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_ } };
+VedgeLines vfont_ascii_lines_L = { .length = 2, .lines = { VFONT_16SEG_4_8, VFONT_16SEG_9_10 } };
+VedgeLines vfont_ascii_lines_M = {0};//{ .length = 4, .lines = { , VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_ } };
+VedgeLines vfont_ascii_lines_O = { .length = 4, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4_8, VFONT_16SEG_9_10, VFONT_16SEG_13_16 } };
+VedgeLines vfont_ascii_lines_P = { .length = 4, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4_8, VFONT_16SEG_5_15, VFONT_16SEG_16 } };
+VedgeLines vfont_ascii_lines_Q = {0};//{ .length = 5, .lines = { , VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_ } };
+VedgeLines vfont_ascii_lines_R = {0};//{ .length = 5, .lines = { , VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_ } };
+VedgeLines vfont_ascii_lines_S = { .length = 5, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_5_15, VFONT_16SEG_8, VFONT_16SEG_9_10, VFONT_16SEG_16 } };
+VedgeLines vfont_ascii_lines_T = { .length = 2, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_2_6 } };
+VedgeLines vfont_ascii_lines_U = { .length = 3, .lines = { VFONT_16SEG_4_8, VFONT_16SEG_9_10, VFONT_16SEG_13_16 } };
+VedgeLines vfont_ascii_lines_V = {0};//{ .length = 2, .lines = { , VFONT_16SEG_, VFONT_16SEG_ } };
+VedgeLines vfont_ascii_lines_W = {0};//{ .length = 4, .lines = { , VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_, VFONT_16SEG_ } };
+VedgeLines vfont_ascii_lines_X = { .length = 2, .lines = { VFONT_16SEG_3_14, VFONT_16SEG_7_17 } };
+VedgeLines vfont_ascii_lines_Y = { .length = 3, .lines = { VFONT_16SEG_3, VFONT_16SEG_6, VFONT_16SEG_17 } };
+VedgeLines vfont_ascii_lines_Z = { .length = 3, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_9_10, VFONT_16SEG_7_17 } };
+VedgeLines vfont_ascii_lines_left_square = { .length = 3, .lines = { VFONT_16SEG_1, VFONT_16SEG_4_8, VFONT_16SEG_9 } };
+VedgeLines vfont_ascii_lines_backslash = { .length = 1, .lines = { VFONT_16SEG_3_14 } };
+VedgeLines vfont_ascii_lines_right_square = { .length = 3, .lines = { VFONT_16SEG_10, VFONT_16SEG_13_16, VFONT_16SEG_18 } };
+VedgeLines vfont_ascii_lines_circumlex = { .length = 0, .lines = { } };
+VedgeLines vfont_ascii_lines_underscore = { .length = 1, .lines = { VFONT_16SEG_9_10 } };
+
+VedgeLines vfont_ascii_lines_undefined = { .length = 0, .lines = {  } };
 
 
 

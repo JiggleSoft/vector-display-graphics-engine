@@ -36,11 +36,28 @@
 // Vector Display Engine Types.
 //-----------------------------------------------------------------------------
 
+
+
+//Error Codes
+#define VEDGE_NO_ERROR (0)
+#define VEDGE_ERR_NULL_CONTEXT (1)
+
+
+#define VDRAW_ERROR_MESSAGE_LENGTH_MAX (256)
+
+
 // Engine context (access via API functions only).
 typedef struct VedgeContext {
     VdrawContext * vdraw_context;
     SDL_Renderer * sdl_renderer;
+    VdrawContext private_vdraw_context;
+    int vedge_error_code;
+    char * vedge_error_message;
+    char private_vdraw_error_message[VDRAW_ERROR_MESSAGE_LENGTH_MAX+1];
 } VedgeContext;
+
+
+
 
 
 typedef struct VedgePoint {

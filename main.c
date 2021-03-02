@@ -154,7 +154,7 @@ int z = 0; int x = 0; int c = 0;
     VmathNumber rot = 0.0f;
 
 
-    char ich = '0';0x20;
+    char ich = 0x20;
 
     int zch = 255;
 
@@ -225,8 +225,8 @@ z++;
 
     if (--zch == 0) {
         zch = 256;
-    if (++ich > '9') {//0x5F) {
-        ich = '0';//0x20;
+    if (++ich > 0x5F) {
+        ich = 0x20;
     }
     }
 //    ich = 0x21;

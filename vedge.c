@@ -26,3 +26,68 @@
 #include "vedge.h"
 
 
+
+
+
+//-----------------------------------------------------------------------------
+// Error Messages.
+//-----------------------------------------------------------------------------
+const char * vedge_error_messages[] = {
+        "No error",
+        "Context is NULL"
+};
+
+
+
+//-----------------------------------------------------------------------------
+// Lifecycle Management Functions.
+//-----------------------------------------------------------------------------
+
+// .
+int vedge_init(VedgeContext * context, SDL_Renderer * sdl_renderer)
+{
+    memset(context, 0, sizeof(VedgeContext));
+    context->sdl_renderer = sdl_renderer;
+    context->vdraw_context = &context->private_vdraw_context;
+
+}
+
+
+// .
+void vedge_done(VedgeContext * vedge)
+{
+
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Error Handling Functions.
+//-----------------------------------------------------------------------------
+
+int vedge_clear_error_code(VedgeContext *vedge)
+{
+
+}
+
+int vedge_get_error_code(const VedgeContext *vedge)
+{
+
+}
+
+
+const char * vedge_get_error_message(const VedgeContext *vedge)
+{
+    if (vedge == NULL) {
+  //FIXME      return vedge_get_error_code_message(ERR_NULL_CONTEXT_GET_ERROR_MESSAGE);
+    }
+    //FIXME return vedge_get_error_code_message(vedge);
+    return 0L;
+}
+
+
+//-----------------------------------------------------------------------------
+// .....
+//-----------------------------------------------------------------------------
+
+

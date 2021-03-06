@@ -3,11 +3,11 @@
 // Filename:     vfont.h
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
-// Author:       Justin Lane (atari@jigglesoft.co.uk)
-// Date:         2021-01-24 19:27
-// Version:      0.0.1
+// Author:       Justin Lane (vedge@jigglesoft.co.uk)
+// Date:         2021-03-06 09:45
+// Version:      0.9.0
 //-----------------------------------------------------------------------------
-// Copyright (c) 2020 Justin Lane
+// Copyright (c) 2021 Justin Lane
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,83 +29,57 @@
 #include "vedge.h"
 
 
-#define VFONT_ASCII_LINES_OFFSET (0x20)
+//-----------------------------------------------------------------------------
+// Font Data Types.
+//-----------------------------------------------------------------------------
 
-
-extern VedgeLines vfont_ascii_lines_undefined;
-
-extern VedgeLines vfont_ascii_lines_space;
-extern VedgeLines vfont_ascii_lines_exclamation;
-extern VedgeLines vfont_ascii_lines_quotation;
-extern VedgeLines vfont_ascii_lines_hash;
-extern VedgeLines vfont_ascii_lines_dollar;
-extern VedgeLines vfont_ascii_lines_percent;
-extern VedgeLines vfont_ascii_lines_ampersand;
-extern VedgeLines vfont_ascii_lines_apostrophe;
-extern VedgeLines vfont_ascii_lines_left_parenthesis;
-extern VedgeLines vfont_ascii_lines_right_parenthesis;
-extern VedgeLines vfont_ascii_lines_asterisk;
-extern VedgeLines vfont_ascii_lines_plus;
-extern VedgeLines vfont_ascii_lines_comma;
-extern VedgeLines vfont_ascii_lines_hyphen;
-extern VedgeLines vfont_ascii_lines_full_stop;
-extern VedgeLines vfont_ascii_lines_slash;
-extern VedgeLines vfont_ascii_lines_0;
-extern VedgeLines vfont_ascii_lines_1;
-extern VedgeLines vfont_ascii_lines_2;
-extern VedgeLines vfont_ascii_lines_3;
-extern VedgeLines vfont_ascii_lines_4;
-extern VedgeLines vfont_ascii_lines_5;
-extern VedgeLines vfont_ascii_lines_6;
-extern VedgeLines vfont_ascii_lines_7;
-extern VedgeLines vfont_ascii_lines_8;
-extern VedgeLines vfont_ascii_lines_9;
-extern VedgeLines vfont_ascii_lines_colon;
-extern VedgeLines vfont_ascii_lines_semicolon;
-extern VedgeLines vfont_ascii_lines_less_than;
-extern VedgeLines vfont_ascii_lines_equal;
-extern VedgeLines vfont_ascii_lines_greater_than;
-extern VedgeLines vfont_ascii_lines_question;
-extern VedgeLines vfont_ascii_lines_at;
-extern VedgeLines vfont_ascii_lines_A;
-extern VedgeLines vfont_ascii_lines_B;
-extern VedgeLines vfont_ascii_lines_C;
-extern VedgeLines vfont_ascii_lines_D;
-extern VedgeLines vfont_ascii_lines_E;
-extern VedgeLines vfont_ascii_lines_F;
-extern VedgeLines vfont_ascii_lines_G;
-extern VedgeLines vfont_ascii_lines_H;
-extern VedgeLines vfont_ascii_lines_I;
-extern VedgeLines vfont_ascii_lines_J;
-extern VedgeLines vfont_ascii_lines_K;
-extern VedgeLines vfont_ascii_lines_L;
-extern VedgeLines vfont_ascii_lines_M;
-extern VedgeLines vfont_ascii_lines_O;
-extern VedgeLines vfont_ascii_lines_P;
-extern VedgeLines vfont_ascii_lines_Q;
-extern VedgeLines vfont_ascii_lines_R;
-extern VedgeLines vfont_ascii_lines_S;
-extern VedgeLines vfont_ascii_lines_T;
-extern VedgeLines vfont_ascii_lines_U;
-extern VedgeLines vfont_ascii_lines_V;
-extern VedgeLines vfont_ascii_lines_W;
-extern VedgeLines vfont_ascii_lines_X;
-extern VedgeLines vfont_ascii_lines_Y;
-extern VedgeLines vfont_ascii_lines_Z;
-extern VedgeLines vfont_ascii_lines_left_square;
-extern VedgeLines vfont_ascii_lines_backslash;
-extern VedgeLines vfont_ascii_lines_right_square;
-extern VedgeLines vfont_ascii_lines_circumlex;
-extern VedgeLines vfont_ascii_lines_backslash;
+// Fixed size font with origin [0.0,0.0] at approx. half the width and height.
+typedef struct Vfont {
+    // The lowest ASCII character value supported.
+    const int char_min;
+    // The maximum ASCII character value supported.
+    const int char_max;
+    // The width of the characters.
+    const VmathNumber char_width;
+    // The height of the characters.
+    const VmathNumber char_height;
+    // The graphical lines to be returned for characters that are undefined.
+    const VedgeLines * undefined_lines;
+    // The graphical lines that make up this font.
+    const VedgeLines * char_lines[];
+} Vfont;
 
 
 
+//-----------------------------------------------------------------------------
+// Fonts Data.
+//-----------------------------------------------------------------------------
 
-extern VedgeLines* vfont_ascii_lines[64];
+// 7-segment font (disabled by default; enable if required).
+#ifdef VFONT_7SEG_ENABLE
+extern Vfont * vfont_7seg;
+#endif
+
+
+// 16-segment font (disabled by default; enable if required).
+#ifdef VFONT_16SEG_ENABLE
+extern Vfont * vfont_16seg;
+#endif
+
+
+// Arcade font (enabled by default; disable if not required).
+#ifndef VFONT_ARCADE_DISABLE
+extern Vfont * vfont_arcade;
+#endif
 
 
 
-extern VedgeLines* vfont_get_ascii_char(char ch);
+//-----------------------------------------------------------------------------
+// Font Functions.
+//-----------------------------------------------------------------------------
+
+// Get a font character as vEDGE lines.
+extern const VedgeLines * vfont_get_char(const Vfont * font, const char ch);
 
 
 

@@ -3,11 +3,11 @@
 // Filename:     vedge.c
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
-// Author:       Justin Lane (atari@jigglesoft.co.uk)
+// Author:       Justin Lane (vedge@jigglesoft.co.uk)
 // Date:         2021-01-24 19:27
 // Version:      0.0.1
 //-----------------------------------------------------------------------------
-// Copyright (c) 2020 Justin Lane
+// Copyright (c) 2021 Justin Lane
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.

@@ -3,11 +3,11 @@
 // Filename:     main.c
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
-// Author:       Justin Lane (atari@jigglesoft.co.uk)
+// Author:       Justin Lane (vedge@jigglesoft.co.uk)
 // Date:         2021-01-24 19:27
 // Version:      0.0.1
 //-----------------------------------------------------------------------------
-// Copyright (c) 2020 Justin Lane
+// Copyright (c) 2021 Justin Lane
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -79,7 +79,8 @@ void dump_matrix3x3(char string[8], VmathMatrix3x3 pDouble);
 
 void dump_matrix3x1(char string[8], VmathMatrix3x1 pDouble);
 
-void draw_number(VdrawContext * vdraw, char ich, VmathNumber rot);
+//void draw_number(VdrawContext * vdraw, char ich, VmathNumber rot);
+void draw_char(VdrawContext * vdraw, const Vfont * font, char ich, VmathNumber x, VmathNumber y, VmathNumber scale_x, VmathNumber scale_y, VmathNumber rot);
 
 #include "test-vmath.c"
 
@@ -99,7 +100,7 @@ void dump_matrix3x3(char * msg, VmathMatrix3x3 m) {
 
 
 int main() {
-VedgeLines * chara = vfont_get_ascii_char('A');
+VedgeLines * chara = vfont_get_char(vfont_arcade, 'A');
 
 
     game_init();
@@ -203,29 +204,63 @@ z++;
     vdraw_line_intensity(&vdraw, C[0], C[1], A[0], A[1], rot / 1000);
 
 
-    draw_number(&vdraw, ich, rot);
+    for (int yyy = 0;  yyy < 8;  yyy++)
+    {
+        for (int xxx = 0;  xxx < 8;  xxx++)
+        {
+            draw_char(&vdraw, vfont_arcade, 0x20+yyy*8+xxx, xxx*130+70, yyy*70+40, 4.0, 8.0, rot);
+        }
+    }
+    draw_char(&vdraw, vfont_arcade, ich, GAME_WINDOW_WIDTH/2, GAME_WINDOW_HEIGHT/2+150, 10.0, 20.0, rot);
+
+    draw_char(&vdraw, vfont_arcade, 'L', 100, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'U', 160, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'N', 210, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'A', 270, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'R', 330, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, ' ', 390, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'L', 450, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'A', 510, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'N', 570, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'D', 630, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'E', 690, 690, 3.0, 6.0, rot);
+    draw_char(&vdraw, vfont_arcade, 'R', 750, 690, 3.0, 6.0, rot);
+
+    draw_char(&vdraw, vfont_arcade, 'J', 100, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'U', 160, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'S', 210, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'T', 270, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'I', 330, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'N', 390, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, ' ', 450, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'L', 510, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'A', 570, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'N', 630, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, 'E', 690, 610, 3.0, 6.0, rot/2.0);
+    draw_char(&vdraw, vfont_arcade, '!', 750, 610, 3.0, 6.0, rot/2.0);
+
+
+    //dump_matrix3x3("matrix1", matrix1);
+    //dump_matrix3x3("matrix2", matrix2);
+    //dump_matrix3x3("matrix3", matrix3);
+
+    //dump_matrix3x1("matrixa", ma);
+    //dump_matrix3x1("matrixb", mb);
+    //dump_matrix3x1("matrixc", mc);
+
+    //dump_matrix3x1("matrixA", A);
+    //dump_matrix3x1("matrixB", B);
+    //dump_matrix3x1("matrixC", C);
 
 
 
-    dump_matrix3x3("matrix1", matrix1);
-    dump_matrix3x3("matrix2", matrix2);
-    dump_matrix3x3("matrix3", matrix3);
-
-    dump_matrix3x1("matrixa", ma);
-    dump_matrix3x1("matrixb", mb);
-    dump_matrix3x1("matrixc", mc);
-
-    dump_matrix3x1("matrixA", A);
-    dump_matrix3x1("matrixB", B);
-    dump_matrix3x1("matrixC", C);
-
-
-
-    VedgeLines * linesch = vfont_get_ascii_char(ich);
+//    const VedgeLines * const linesch = vfont_get_char(vfont_7seg, ich);
+//    const VedgeLines * const linesch = vfont_get_char(vfont_16seg, ich);
+    const VedgeLines * const linesch = vfont_get_char(vfont_arcade, ich);
 
     if (--zch == 0) {
         zch = 256;
-    if (++ich > 0x5F) {
+    if (++ich > 0x7F || ich < 0) {
         ich = 0x20;
     }
     }
@@ -233,8 +268,8 @@ z++;
 
     for (int jch = 0; jch < linesch->length; jch++) {
         //printf("linesch=%d\n", linesch);
-        printf("lines length = %d, jch = %d\n", linesch->length, jch);
-        fflush(stdout);
+        //printf("lines length = %d, jch = %d\n", linesch->length, jch);
+        //fflush(stdout);
         vdraw_line(&vdraw, linesch->lines[jch].x1*30+150, linesch->lines[jch].y1*30+150, linesch->lines[jch].x2*30+150, linesch->lines[jch].y2*30+150);
     }
 
@@ -304,16 +339,16 @@ z++;
     return 0;
 }
 
-void draw_number(VdrawContext * vdraw, char ich, VmathNumber rot) {
+void draw_char(VdrawContext * vdraw, const Vfont * font, char ich, VmathNumber x, VmathNumber y, VmathNumber scale_x, VmathNumber scale_y, VmathNumber rot) {
 
     VmathMatrix3x3 matrix1, matrix2, matrix3, matrix4, matrix5;
     vmath_matrix3x3_set_rotation_clockwise(matrix1, rot);
-    vmath_matrix3x3_set_translation(matrix2, GAME_WINDOW_WIDTH/2, GAME_WINDOW_HEIGHT/2 + 150);
-    vmath_matrix3x3_set_scaling(matrix3, 10.0, 20.0);
+    vmath_matrix3x3_set_translation(matrix2, x, y);
+    vmath_matrix3x3_set_scaling(matrix3, scale_x, scale_y);
     vmath_matrix3x3_multiply_matrix3x3(matrix2, matrix1, matrix4);
     vmath_matrix3x3_multiply_matrix3x3(matrix4, matrix3, matrix5);
     VmathMatrix3x1 ma, mb;
-    VedgeLines *glyph = vfont_get_ascii_char(ich);
+    VedgeLines *glyph = vfont_get_char(font, ich);
     for (int i = 0; i < glyph->length; i++) {
         ma[0] = glyph->lines[i].x1; ma[1] = glyph->lines[i].y1; ma[2] = 1;
         mb[0] = glyph->lines[i].x2; mb[1] = glyph->lines[i].y2; mb[2] = 1;
@@ -322,6 +357,9 @@ void draw_number(VdrawContext * vdraw, char ich, VmathNumber rot) {
         vmath_matrix3x3_multiply_matrix3x1(matrix5, mb, B);
         vdraw_line(vdraw, A[0], A[1], B[0], B[1]);
     }
+    SDL_SetRenderDrawColor(vdraw->sdl_renderer, 255, 0, 0, 0);
+    SDL_RenderDrawLine(vdraw->sdl_renderer, x-2, y-2, x+2, y+2);
+    SDL_RenderDrawLine(vdraw->sdl_renderer, x-2, y+2, x+2, y-2);
 }
 
 

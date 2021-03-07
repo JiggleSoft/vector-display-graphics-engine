@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-06 09:45
-// Version:      0.9.0
+// Date:         2021-03-07 08:53
+// Version:      0.9.5
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -226,7 +226,7 @@ static VedgeLines vfont_16seg_char_8 = { .length = 5, .lines = { VFONT_16SEG_1_1
 static VedgeLines vfont_16seg_char_9 = { .length = 4, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4, VFONT_16SEG_5_15, VFONT_16SEG_13_16 } };
 static VedgeLines vfont_16seg_char_colon = { .length = 1, .lines = { VFONT_16SEG_2_6 } };
 static VedgeLines vfont_16seg_char_semicolon = { .length = 2, .lines = { VFONT_16SEG_2, VFONT_16SEG_7 } };
-static VedgeLines vfont_16seg_char_less_than = { .length = 3, .lines = { VFONT_16SEG_5, VFONT_16SEG_14, VFONT_16SEG_17} };
+static VedgeLines vfont_16seg_char_less_than = { .length = 3, .lines = { VFONT_16SEG_5, VFONT_16SEG_14, VFONT_16SEG_17 } };
 static VedgeLines vfont_16seg_char_equal = { .length = 2, .lines = { VFONT_16SEG_5_15, VFONT_16SEG_9_10 } };
 static VedgeLines vfont_16seg_char_greater_than = { .length = 3, .lines = { VFONT_16SEG_3, VFONT_16SEG_7, VFONT_16SEG_15 } };
 static VedgeLines vfont_16seg_char_question = { .length = 5, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_6, VFONT_16SEG_12, VFONT_16SEG_15, VFONT_16SEG_16 } };
@@ -278,16 +278,16 @@ static VedgeLines vfont_16seg_char_l = { .length = 1, .lines = { VFONT_16SEG_4_8
 static VedgeLines vfont_16seg_char_m = { .length = 4, .lines = { VFONT_16SEG_5_15, VFONT_16SEG_6, VFONT_16SEG_8, VFONT_16SEG_13 } };
 static VedgeLines vfont_16seg_char_n = { .length = 3, .lines = { VFONT_16SEG_5, VFONT_16SEG_6, VFONT_16SEG_8 } };
 static VedgeLines vfont_16seg_char_o = { .length = 4, .lines = { VFONT_16SEG_5, VFONT_16SEG_6, VFONT_16SEG_8, VFONT_16SEG_9 } };
-static VedgeLines vfont_16seg_char_p = { .length = 4, .lines = { VFONT_16SEG_1, VFONT_16SEG_2, VFONT_16SEG_4_8, VFONT_16SEG_5} };
+static VedgeLines vfont_16seg_char_p = { .length = 4, .lines = { VFONT_16SEG_1, VFONT_16SEG_2, VFONT_16SEG_4_8, VFONT_16SEG_5 } };
 static VedgeLines vfont_16seg_char_q = { .length = 4, .lines = { VFONT_16SEG_1, VFONT_16SEG_2_6, VFONT_16SEG_4, VFONT_16SEG_5 } };
 static VedgeLines vfont_16seg_char_r = { .length = 2, .lines = { VFONT_16SEG_5, VFONT_16SEG_8 } };
 static VedgeLines vfont_16seg_char_s = { .length = 5, .lines = { VFONT_16SEG_1, VFONT_16SEG_4, VFONT_16SEG_5, VFONT_16SEG_6, VFONT_16SEG_9 } };
 static VedgeLines vfont_16seg_char_t = { .length = 3, .lines = { VFONT_16SEG_4_8, VFONT_16SEG_5, VFONT_16SEG_9 } };
 static VedgeLines vfont_16seg_char_u = { .length = 3, .lines = { VFONT_16SEG_6, VFONT_16SEG_8, VFONT_16SEG_9 } };
 static VedgeLines vfont_16seg_char_v = { .length = 2, .lines = { VFONT_16SEG_7, VFONT_16SEG_8 } };
-static VedgeLines vfont_16seg_char_w = { .length = 4, .lines = { VFONT_16SEG_7, VFONT_16SEG_8, VFONT_16SEG_13, VFONT_16SEG_14} };
-static VedgeLines vfont_16seg_char_x = { .length = 2, .lines = { VFONT_16SEG_3_14, VFONT_16SEG_7_17} };
-static VedgeLines vfont_16seg_char_y = { .length = 4, .lines = { VFONT_16SEG_2, VFONT_16SEG_10, VFONT_16SEG_13_16, VFONT_16SEG_15} };
+static VedgeLines vfont_16seg_char_w = { .length = 4, .lines = { VFONT_16SEG_7, VFONT_16SEG_8, VFONT_16SEG_13, VFONT_16SEG_14 } };
+static VedgeLines vfont_16seg_char_x = { .length = 2, .lines = { VFONT_16SEG_3_14, VFONT_16SEG_7_17 } };
+static VedgeLines vfont_16seg_char_y = { .length = 4, .lines = { VFONT_16SEG_2, VFONT_16SEG_10, VFONT_16SEG_13_16, VFONT_16SEG_15 } };
 static VedgeLines vfont_16seg_char_z = { .length = 3, .lines = { VFONT_16SEG_5, VFONT_16SEG_7, VFONT_16SEG_9 } };
 static VedgeLines vfont_16seg_char_left_brace = { .length = 4, .lines = { VFONT_16SEG_2_6, VFONT_16SEG_5, VFONT_16SEG_10, VFONT_16SEG_18 } };
 static VedgeLines vfont_16seg_char_vertical_bar = { .length = 1, .lines = { VFONT_16SEG_2_6 } };
@@ -417,7 +417,7 @@ Vfont * vfont_16seg = &vfont_16seg_data;
 
 
 // Character glyphs.
-static VedgeLines vfont_arcade_char_undefined = { .length = 8, .lines = { VFONT_16SEG_1_18, VFONT_16SEG_4_8, VFONT_16SEG_9_10, VFONT_16SEG_13_16, VFONT_16SEG_2_6, VFONT_16SEG_3_14, VFONT_16SEG_5_15, VFONT_16SEG_7_17 } };
+static VedgeLines vfont_arcade_char_undefined = { .length = 8, .lines = { VFONT_ARCADE_11_19, VFONT_ARCADE_11_91, VFONT_ARCADE_91_99, VFONT_ARCADE_19_99, VFONT_ARCADE_15_95, VFONT_ARCADE_51_59, VFONT_ARCADE_11_99, VFONT_ARCADE_19_91 } };
 
 static VedgeLines vfont_arcade_char_space = { .length = 0, .lines = { } };
 static VedgeLines vfont_arcade_char_exclamation = { .length = 2, .lines = { VFONT_ARCADE_15_75, VFONT_ARCADE_85_95 } };
@@ -425,7 +425,7 @@ static VedgeLines vfont_arcade_char_quotation = { .length = 2, .lines = { VFONT_
 static VedgeLines vfont_arcade_char_hash = { .length = 4, .lines = { VFONT_ARCADE_13_93, VFONT_ARCADE_17_97, VFONT_ARCADE_31_39, VFONT_ARCADE_71_79 } };
 static VedgeLines vfont_arcade_char_dollar = { .length = 7, .lines = { VFONT_ARCADE_22_28, VFONT_ARCADE_82_88, VFONT_ARCADE_52_58, VFONT_ARCADE_22_52, VFONT_ARCADE_58_88, VFONT_ARCADE_14_94, VFONT_ARCADE_16_96 } };
 static VedgeLines vfont_arcade_char_percent = { .length = 9, .lines = { VFONT_ARCADE_19_91, VFONT_ARCADE_11_13, VFONT_ARCADE_11_31,VFONT_ARCADE_13_33, VFONT_ARCADE_31_33, VFONT_ARCADE_77_79, VFONT_ARCADE_77_97, VFONT_ARCADE_97_99, VFONT_ARCADE_79_99 } };
-static VedgeLines vfont_arcade_char_ampersand = { .length = 0, .lines = {  } };//FIXME: !!!!!!!!!!!!!!!!!!!!
+static VedgeLines vfont_arcade_char_ampersand = { .length = 6, .lines = { VFONT_ARCADE_14_32, VFONT_ARCADE_14_36, VFONT_ARCADE_32_98, VFONT_ARCADE_36_72, VFONT_ARCADE_58_94, VFONT_ARCADE_72_94 } };
 static VedgeLines vfont_arcade_char_apostrophe = { .length = 1, .lines = { VFONT_ARCADE_15_26 } };
 static VedgeLines vfont_arcade_char_left_parenthesis = { .length = 3, .lines = { VFONT_ARCADE_17_23, VFONT_ARCADE_23_83, VFONT_ARCADE_83_97 } };
 static VedgeLines vfont_arcade_char_right_parenthesis = { .length = 3, .lines = { VFONT_ARCADE_13_27, VFONT_ARCADE_27_87, VFONT_ARCADE_87_93 } };
@@ -436,7 +436,7 @@ static VedgeLines vfont_arcade_char_hyphen = { .length = 1, .lines = { VFONT_ARC
 static VedgeLines vfont_arcade_char_full_stop = { .length = 1, .lines = { VFONT_ARCADE_85_95 } };
 static VedgeLines vfont_arcade_char_slash = { .length = 1, .lines = { VFONT_ARCADE_19_91 } };
 static VedgeLines vfont_arcade_char_0 = { .length = 4, .lines = { VFONT_ARCADE_11_19, VFONT_ARCADE_11_91, VFONT_ARCADE_91_99, VFONT_ARCADE_19_99 } };
-static VedgeLines vfont_arcade_char_1 = { .length = 1, .lines = { VFONT_ARCADE_51_59 } };
+static VedgeLines vfont_arcade_char_1 = { .length = 1, .lines = { VFONT_ARCADE_15_95 } };
 static VedgeLines vfont_arcade_char_2 = { .length = 5, .lines = { VFONT_ARCADE_11_19, VFONT_ARCADE_19_59, VFONT_ARCADE_51_59, VFONT_ARCADE_51_91, VFONT_ARCADE_91_99 } };
 static VedgeLines vfont_arcade_char_3 = { .length = 4, .lines = { VFONT_ARCADE_11_19, VFONT_ARCADE_51_59, VFONT_ARCADE_91_99, VFONT_ARCADE_19_99 } };
 static VedgeLines vfont_arcade_char_4 = { .length = 3, .lines = { VFONT_ARCADE_11_51, VFONT_ARCADE_51_59, VFONT_ARCADE_19_99 } };
@@ -451,8 +451,7 @@ static VedgeLines vfont_arcade_char_less_than = { .length = 2, .lines = { VFONT_
 static VedgeLines vfont_arcade_char_equal = { .length = 2, .lines = { VFONT_ARCADE_31_39, VFONT_ARCADE_71_79 } };
 static VedgeLines vfont_arcade_char_greater_than = { .length = 2, .lines = { VFONT_ARCADE_11_59, VFONT_ARCADE_59_91 } };
 static VedgeLines vfont_arcade_char_question = { .length = 5, .lines = { VFONT_ARCADE_11_19, VFONT_ARCADE_55_59, VFONT_ARCADE_19_59, VFONT_ARCADE_55_75, VFONT_ARCADE_85_95 } };
-//FIXME: !!!!!!!!!!!!!!!!!!!!
-static VedgeLines vfont_arcade_char_at = { .length = 8, .lines = { { .x1 = 2, .y1 = 2, .x2 = 2, .y2 = -2 }, { .x1 = 2, .y1 = -2, .x2 = -2, .y2 = -2 }, { .x1 = -2, .y1 = -2, .x2 = -2, .y2 = 2 }, { .x1 = -2, .y1 = 2, .x2 = 4, .y2 = 2 }, { .x1 = 4, .y1 = 2, .x2 = 4, .y2 = -4 }, { .x1 = 4, .y1 = -4, .x2 = -4, .y2 = -4 }, { .x1 = -4, .y1 = -4, .x2 = -4, .y2 = 4 }, { .x1 = -4, .y1 = 4, .x2 = 4, .y2 = 4 } } };
+static VedgeLines vfont_arcade_char_at = { .length = 8, .lines = { VFONT_ARCADE_11_91, VFONT_ARCADE_19_11, VFONT_ARCADE_33_73, VFONT_ARCADE_37_33, VFONT_ARCADE_73_79, VFONT_ARCADE_77_37, VFONT_ARCADE_79_19, VFONT_ARCADE_91_99 } };
 static VedgeLines vfont_arcade_char_A = { .length = 5, .lines = { VFONT_ARCADE_15_31, VFONT_ARCADE_15_39, VFONT_ARCADE_51_59, VFONT_ARCADE_31_91, VFONT_ARCADE_39_99 } };
 static VedgeLines vfont_arcade_char_B = { .length = 8, .lines = { VFONT_ARCADE_11_17, VFONT_ARCADE_51_57, VFONT_ARCADE_91_97, VFONT_ARCADE_17_39, VFONT_ARCADE_57_39, VFONT_ARCADE_57_79, VFONT_ARCADE_79_97, VFONT_ARCADE_11_91 } };
 static VedgeLines vfont_arcade_char_C = { .length = 3, .lines = { VFONT_ARCADE_11_19, VFONT_ARCADE_91_99, VFONT_ARCADE_11_91 } };

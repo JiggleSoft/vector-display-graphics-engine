@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-04 17:30
-// Version:      0.1.0
+// Date:         2021-03-07 08:53
+// Version:      0.9.5
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -137,23 +137,21 @@
 #define VFONT_ARCADE_39_79 VFONT_ARCADE_A_B(39,79)
 #define VFONT_ARCADE_57_39 VFONT_ARCADE_A_B(57,39)
 #define VFONT_ARCADE_57_79 VFONT_ARCADE_A_B(57,79)
-//#define VFONT_ARCADE__ VFONT_ARCADE_A_B(,)
-//#define VFONT_ARCADE__ VFONT_ARCADE_A_B(,)
-//#define VFONT_ARCADE__ VFONT_ARCADE_A_B(,)
-//#define VFONT_ARCADE__ VFONT_ARCADE_A_B(,)
-//#define VFONT_ARCADE__ VFONT_ARCADE_A_B(,)
-//#define VFONT_ARCADE__ VFONT_ARCADE_A_B(,)
-//#define VFONT_ARCADE__ VFONT_ARCADE_A_B(,)
+#define VFONT_ARCADE_14_32 VFONT_ARCADE_A_B(14,32)
+#define VFONT_ARCADE_14_36 VFONT_ARCADE_A_B(14,36)
+#define VFONT_ARCADE_32_98 VFONT_ARCADE_A_B(32,98)
+#define VFONT_ARCADE_36_72 VFONT_ARCADE_A_B(36,72)
+#define VFONT_ARCADE_58_94 VFONT_ARCADE_A_B(58,94)
+#define VFONT_ARCADE_72_94 VFONT_ARCADE_A_B(72,94)
+#define VFONT_ARCADE_19_11 VFONT_ARCADE_A_B(19,11)
+#define VFONT_ARCADE_33_73 VFONT_ARCADE_A_B(33,73)
+#define VFONT_ARCADE_37_33 VFONT_ARCADE_A_B(37,33)
+#define VFONT_ARCADE_73_79 VFONT_ARCADE_A_B(73,79)
+#define VFONT_ARCADE_77_37 VFONT_ARCADE_A_B(77,37)
+#define VFONT_ARCADE_79_19 VFONT_ARCADE_A_B(79,19)
 
 
-// VFONT_ARCADE_A_B(,)
-//#define VFONT_ARCADE_11_13 { VFONT_ARCADE_A_B(11,13) }
-#define VFONT_ARCADE_11_15 {}
-//#define VFONT_ARCADE_11_19 VFONT_7SEG_A
- \
-                              \
-                              \
-                              \
+
 //-----------------------------------------------------------------------------
 // Seven Segment Displays.
 //-----------------------------------------------------------------------------
@@ -182,6 +180,7 @@
 
 #define VFONT_7SEG_EF { .x1 = -4, .y1 = -4, .x2 = -4, .y2 =  4 }
 #define VFONT_7SEG_BC { .x1 =  4, .y1 = -4, .x2 =  4, .y2 =  4 }
+
 
 
 //-----------------------------------------------------------------------------

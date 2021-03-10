@@ -26,15 +26,19 @@
 #include "vedge.h"
 
 
-
+#define countof(n) (sizeof(n)/sizeof(n[0]))
 
 
 //-----------------------------------------------------------------------------
-// Error Messages.
+// Error Message Strings.
 //-----------------------------------------------------------------------------
+
+// Error message strings.
 const char * vedge_error_messages[] = {
         "No error",
-        "Context is NULL"
+        "Context is NULL",
+        "Context is not initialised",
+        "General failure"
 };
 
 
@@ -49,6 +53,17 @@ int vedge_init(VedgeContext * context, SDL_Renderer * sdl_renderer)
     memset(context, 0, sizeof(VedgeContext));
     context->sdl_renderer = sdl_renderer;
     context->vdraw_context = &context->private_vdraw_context;
+    vedge_clear_error_code(context);
+    vdraw_init(context->vdraw_context, sdl_renderer);
+
+
+//    vedge_frame_start(context);
+//    vedge_frame_finish(context);
+//    vdraw_set_foreground_colour(vdraw, 255, 255, 255 );
+//    vdraw_set_background_colour(vdraw, 0, 0, 0);
+//    vdraw_set_foreground_colour_min_max_enable(vdraw, 0);
+//    vdraw_clear_screen(vdraw);
+//    vdraw_flip(vdraw);
 
 }
 
@@ -56,7 +71,7 @@ int vedge_init(VedgeContext * context, SDL_Renderer * sdl_renderer)
 // .
 void vedge_done(VedgeContext * vedge)
 {
-
+    vdraw_done(vedge->vdraw_context);
 }
 
 
@@ -65,29 +80,71 @@ void vedge_done(VedgeContext * vedge)
 // Error Handling Functions.
 //-----------------------------------------------------------------------------
 
-int vedge_clear_error_code(VedgeContext *vedge)
+// Clear the last error code.
+void vedge_clear_error_code(VedgeContext *vedge)
 {
-
+    vedge->vedge_error_code = VEDGE_NO_ERROR;
+    vedge->vedge_error_message = vedge_error_messages[VEDGE_NO_ERROR];
 }
 
+
+// Get the last error code.
 int vedge_get_error_code(const VedgeContext *vedge)
 {
-
+    return vedge->vedge_error_code;
 }
 
 
+// Get the last error message.
 const char * vedge_get_error_message(const VedgeContext *vedge)
 {
-    if (vedge == NULL) {
-  //FIXME      return vedge_get_error_code_message(ERR_NULL_CONTEXT_GET_ERROR_MESSAGE);
-    }
-    //FIXME return vedge_get_error_code_message(vedge);
-    return 0L;
+    return vedge->vedge_error_message;
 }
+
+
+void vedge_set_error_code(VedgeContext * vedge, const int error_code)
+{
+    vedge->vedge_error_code = error_code;
+    if (error_code >= 0 || error_code < countof(vedge_error_messages)) {
+        vedge->vedge_error_message = vedge_error_messages[error_code];
+    } else {
+        sprintf(vedge->private_vdraw_error_message, "Unknown error %d", error_code);
+        vedge->vedge_error_message = vedge->private_vdraw_error_message;
+    }
+}
+
+
+void vedge_set_error(VedgeContext * vedge, const int error_code, const char * error_message)
+{
+    vedge->vedge_error_code = error_code;
+    strncpy(vedge->private_vdraw_error_message, error_message, VDRAW_ERROR_MESSAGE_LENGTH_MAX);
+    vedge->private_vdraw_error_message[VDRAW_ERROR_MESSAGE_LENGTH_MAX-1] = '\0';
+    vedge->vedge_error_message = vedge->private_vdraw_error_message;
+}
+
 
 
 //-----------------------------------------------------------------------------
 // .....
 //-----------------------------------------------------------------------------
+
+
+void vedge_frame_start(VedgeContext * context)
+{
+    vdraw_clear_screen(context->vdraw_context);
+}
+
+
+void vedge_frame_finish(VedgeContext * context)
+{
+    vdraw_flip(context->vdraw_context);
+}
+
+
+void vedge_frame_add_game_object(VedgeContext * context, const VedgeGameObject game_object)
+{
+
+}
+
 
 

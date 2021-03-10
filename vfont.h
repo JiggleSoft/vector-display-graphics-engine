@@ -5,7 +5,7 @@
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
 // Date:         2021-03-07 08:53
-// Version:      0.9.5
+// Version:      0.9.6
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -43,10 +43,10 @@ typedef struct Vfont {
     const VmathNumber char_width;
     // The height of the characters.
     const VmathNumber char_height;
-    // The graphical lines to be returned for characters that are undefined.
-    const VedgeLines * undefined_lines;
+    // The graphical glyph to be returned for characters that are undefined.
+    const VedgeGlyph * undefined_glyph;
     // The graphical lines that make up this font.
-    const VedgeLines * char_lines[];
+    const VedgeGlyph * char_glyphs[];
 } Vfont;
 
 
@@ -79,7 +79,7 @@ extern Vfont * vfont_arcade;
 //-----------------------------------------------------------------------------
 
 // Get a font character as vEDGE lines.
-extern const VedgeLines * vfont_get_char(const Vfont * font, const char ch);
+extern const VedgeGlyph * vfont_get_char(const Vfont * font, const char ch);
 
 
 

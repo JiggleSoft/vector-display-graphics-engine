@@ -33,17 +33,183 @@
 
 
 //-----------------------------------------------------------------------------
-// Vector Display Engine Types.
+// Constants.
 //-----------------------------------------------------------------------------
 
-
-
-//Error Codes
+// Error Codes
 #define VEDGE_NO_ERROR (0)
 #define VEDGE_ERR_NULL_CONTEXT (1)
 
-
+// Error message maximum size (includes NUL terminator).
 #define VDRAW_ERROR_MESSAGE_LENGTH_MAX (256)
+
+
+
+//-----------------------------------------------------------------------------
+// Vector Display Graphics Engine Types.
+//-----------------------------------------------------------------------------
+
+// Display details.
+typedef struct VedgeDisplayDetail {
+    // Drawable display width (pixels).
+    int width;
+    // Drawable display height (pixels).
+    int height;
+    // Display refresh frequancy (Hz).
+    int refresh_rate;
+};
+
+// Window details.
+typedef struct VedgeWindowDetail {
+    // Number of pixels
+    int width;
+    int height;
+    // Number of physical pixels.
+};
+
+// Two dimensional point (x1,y1)
+typedef struct VedgePoint {
+    VmathNumber x1;
+    VmathNumber y1;
+} VedgePoint;
+
+
+// Two dimensional line (x1,y1)-(x2,y2).
+typedef struct VedgeLine {
+    VmathNumber x1;
+    VmathNumber y1;
+    VmathNumber x2;
+    VmathNumber y2;
+} VedgeLine;
+
+
+// Array of two dimensional points.
+typedef struct VedgePoints {
+    int length;
+    VedgePoint points[];
+} VedgePoints;
+
+
+// Array of two dimensional points.
+typedef struct VedgePath {
+    _Bool closed;
+    VedgePoints points[];
+} VedgePath;
+
+
+// Array of two dimensional lines.
+typedef struct VedgeLines {
+    int length;
+    VedgeLine lines[];
+} VedgeLines;
+
+
+// Font glyph.
+typedef struct VedgeGlyph {
+    int length;
+    VedgeLine lines[];
+} VedgeGlyph;
+
+
+////
+//typedef struct VedgeString {
+//    enum { LEFT, CENTRE, RIGHT } justification;
+//    char * characters;
+//};
+
+//
+typedef union VedgeGameItemVariant {
+    VedgePoint       * point;
+    VedgeLine        * line;
+    VedgePoints      * points;
+    VedgePath        * path;
+    VedgeLines       * lines;
+} VedgeGameItemVariant;
+
+//
+typedef struct VedgeGameItem {
+    int type;
+    VedgeGameItemVariant game_item;
+} VedgeGameItem;
+
+//
+////VedgeItem
+//struct VedgeItems {
+//    int count;
+//    union {;
+////    CedgeItem
+//
+//};
+//
+
+
+// Represents an object within the game.
+typedef struct VedgeGameObject {
+    // The position of this object within the world.
+    VmathMatrix3x3 position;
+    // The orientation of this object within the world.
+    VmathMatrix3x3 rotation;
+    // The size of this object within the world.
+    VmathMatrix3x3 scaling;
+    int length;
+    VedgeGameItem items[];
+} VedgeGameObject;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//// List of two dimensional points.
+//typedef struct VedgeGlyph {
+//    char character;
+//    VmathNumber x1;
+//    VmathNumber y1;
+//    char character;
+//    int length;
+//    VedgePoint dots[];
+//} VedgePath;
+//
+
+
+
+
+//
+////
+////groups of variant type+thing
+//
+//
+//// List of two dimensional points.
+//typedef struct VedgePoints {
+//    int length;
+//    VedgePoint dots[];
+//} VedgePoints;
+//
+//
+//// List of two dimensional lines.
+//typedef struct VedgeLines {
+//    int length;
+//    VedgeLine lines[];
+//} VedgeLines;
+//
+
+
+
 
 
 // Engine context (access via API functions only).
@@ -58,56 +224,104 @@ typedef struct VedgeContext {
 
 
 
+//-----------------------------------------------------------------------------
+// Lifecycle Management Functions.
+//-----------------------------------------------------------------------------
 
+// Initialise the engine context.
+extern int vedge_init(VedgeContext * context, SDL_Renderer * sdl_renderer);
 
-typedef struct VedgePoint {
-    VmathNumber x;
-    VmathNumber y;
-    VmathNumber t;
-} VedgePoint;
-
-
-typedef struct VedgeLine {
-    VmathNumber x1;
-    VmathNumber y1;
-    VmathNumber x2;
-    VmathNumber y2;
-} VedgeLine;
-
-
-typedef struct VedgeLinePath {
-    int length;
-    VedgePoint   origin;
-    VedgePoint path[];
-} VedgeLinePath;
-
-typedef struct VedgeLines {
-    int length;
-    VedgeLine lines[];
-} VedgeLines;
-
-enum ItemType { Point, Line, LinePath, Lines, Group };
-
-
-typedef struct VedgeGroupItem {
-} VedgeGroupItem;
-
-typedef struct  VedgeGroup {
-
-} VedgeGroup;
-
-
-typedef int VEDGE_GROUP;
+// Clean-up the engine context.
+extern void vedge_done(VedgeContext * vedge);
 
 
 
+//-----------------------------------------------------------------------------
+// Error Handling Functions.
+//-----------------------------------------------------------------------------
+
+// Clear the last error code.
+void vedge_clear_error_code(VedgeContext *vedge);
+
+// Get the last error code.
+int vedge_get_error_code(const VedgeContext *vedge);
+
+// Get the last error message.
+const char * vedge_get_error_message(const VedgeContext *vedge);
+
+
+
+//-----------------------------------------------------------------------------
+// Engine Functions.
+//-----------------------------------------------------------------------------
+
+
+void vedge_frame_start(VedgeContext * context);
+
+
+void vedge_frame_finish(VedgeContext * context);
+
+
+void vedge_frame_add_game_object(VedgeContext * context, const VedgeGameObject game_object);
+
+
+
+
+
+
+
+
+
+
+
+//// Item types.
+//enum ItemType {
+//    // Single point.
+//    Dot,
+//    // A line
+//    Line,
+//    // A single characters.
+//    Char,
+//    // A collection of dots.
+//    Dots,
+//    // A collection of points joined together with lines that make up a continuous path.
+//    LinePath,
+//    // A collection of lines.
+//    Lines,
+//    // A string of text.
+//    String,
+//    // A collection of points joined together with lines that make up a continuous path.
+//  //  LinePath,
+//    //FXME: description and name.
+//  //  VertsLines,
+//    // Child game objects.
+//    GameObjects
+//};
+//
+
+
+//typedef struct VedgeGroupItem {
+//} VedgeGroupItem;
+//
+//typedef struct  VedgeGroup {
+//
+//} VedgeGroup;
+//
+//
+//typedef int VEDGE_GROUP;
+
+
+
+//
+//
+//vedge_game_object_
 
 
 
 
 // Type Drawing Functions
 
-void vedge_draw_point_type(VedgeContext *  context, VedgePoint point);
+//void vedge_draw_point_type(VedgeContext *  context, VedgePoint point);
 //{
     //FIXME: vedge_draw_point(context point.x, point.y);
 //}

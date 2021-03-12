@@ -85,8 +85,6 @@ void renderClosedVector(SDL_Renderer* renderer, int red, int green, int blue, in
 }
 
 
-extern void run_all_tests(void);
-
 void dump_matrix3x3(char string[8], VmathMatrix3x3 pDouble);
 
 void dump_matrix3x1(char string[8], VmathMatrix3x1 pDouble);
@@ -100,7 +98,6 @@ void draw_char2(VdrawContext * vdraw, const Vfont * font, char ich,
 
 void collitz();
 
-#include "test-vmath.c"
 
 
 void dump_matrix3x1(char * msg, VmathMatrix3x1 m) {
@@ -130,8 +127,6 @@ VedgeGlyph * chara = vfont_get_char(vfont_arcade, 'A');
 
 
     game_init();
-
-    run_all_tests();
 
     VdrawContext * vdraw = &vedge.private_vdraw_context;
 
@@ -226,8 +221,8 @@ z++;
         }
     }
 
-//    cam_rot += 0.5;
-//    if (cam_rot > 1024.0) { cam_rot = 0.0; }
+    cam_rot += 0.5;
+    if (cam_rot > 1024.0) { cam_rot = 0.0; }
 
 //    cam_sx += 0.01;
 //    if (cam_sx > 20) cam_sx = -5.0;

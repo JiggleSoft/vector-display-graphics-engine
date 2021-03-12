@@ -29,18 +29,30 @@
 
 
 
+#ifndef VMATH_SINCOS_PRECISION
+#define VMATH_SINCOS_PRECISION 4
+#endif
+
+
 // Millibit-revolution look up table
-static VmathNumber vmath_millirev_lut[1024];
+static VmathNumber vmath_millirev_lut[1024 * VMATH_SINCOS_PRECISION];
 
 
 
 // Initialise math library.
 void vmath_init(void)
 {
-    for (int i = 0;  i < 1024;  i++)
+    for (int i = 0;  i < 1024 * VMATH_SINCOS_PRECISION;  i++)
     {
         vmath_millirev_lut[i] = sin(vmath_mbr_to_rad(i));
     }
+}
+
+
+// Clean-up math library.
+void vmath_done(void)
+{
+    // EMPTY.
 }
 
 
@@ -48,52 +60,99 @@ void vmath_init(void)
 // Millibit-revolution functions.
 VmathNumber vmath_mbr_sin(VmathNumber mbr)
 {
-    return vmath_millirev_lut[((int)(mbr + (0.5f))) % 1024];
+    return vmath_millirev_lut[((int)(mbr + (0.5f))) % (1024 * VMATH_SINCOS_PRECISION)];
 }
 
 
 VmathNumber vmath_mbr_cos(VmathNumber mbr)
 {
-    return vmath_millirev_lut[((int)(mbr + (256.5f))) % 1024];
+    return vmath_millirev_lut[((int)(mbr + (256.5f))) % (1024 * VMATH_SINCOS_PRECISION)];
 }
 
+
+// .
+#define VMATH_MBR_PER_REV VMATHNUMBER_C(1024.0)
+// .
+#define VMATH_RAD_PER_REV VMATHNUMBER_C(VMATHNUMBER_2PI)
+// .
+#define VMATH_DEG_PER_REV VMATHNUMBER_C(360.0)
+
+
+//VMATHNUMBER_2PI / VMATHNUMBER_C(1024.0)
+#define VMATH_MBR_PER_RAD (1)
+//(VMATHNUMBER_C( 1024.0 ) / VMATHNUMBER_C( 360.0 ));
+#define VMATH_MBR_PER_DEG (1)
+//VMATHNUMBER_2PI / VMATHNUMBER_C( 1024.0 );
+#define VMATH_RAD_PER_MBR (1)
+// (VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));;
+#define VMATH_RAD_PER_DEG (VMATHNUMBER_2PI / VMATHNUMBER_C(360.0))
+//(VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));
+#define VMATH_DEG_PER_MBR (1)
+//(VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));;
+#define VMATH_DEG_PER_RAD (1)
 
 
 // Angle conversion functions; Millibit-revolutions (mbr) (1024 * mbr = 360 degrees), Radians (rad), Degrees (deg).
 VmathNumber vmath_rad_to_mbr(VmathNumber rad)
 {
-    return rad * VMATHNUMBER_2PI / VMATHNUMBER_C(1024.0);
+    return rad * VMATH_MBR_PER_RAD;
 }
 
 
 VmathNumber vmath_deg_to_mbr(VmathNumber deg)
 {
-    return deg * (VMATHNUMBER_C( 1024.0 ) / VMATHNUMBER_C( 360.0 ));
+    return deg * VMATH_MBR_PER_DEG;
 }
 
 
 VmathNumber vmath_mbr_to_rad(VmathNumber mbr)
 {
-    return mbr * VMATHNUMBER_2PI / VMATHNUMBER_C( 1024.0 );
+    return mbr * VMATH_RAD_PER_MBR;
 }
 
 
 VmathNumber vmath_deg_to_rad(VmathNumber deg)
 {
-    return deg * (VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));;
+    return deg * VMATH_RAD_PER_DEG;
 }
 
 
 VmathNumber vmath_mbr_to_deg(VmathNumber mbr)
 {
-    return mbr * (VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));
+    return mbr * VMATH_DEG_PER_MBR;
 }
 
 
 VmathNumber vmath_rad_to_deg(VmathNumber deg)
 {
-    return deg * (VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));;
+    return deg * VMATH_DEG_PER_RAD;
 }
+
+
+//-----------------------------------------------------------------------------
+// Angle Normalisation Functions.
+//-----------------------------------------------------------------------------
+
+// Normalise millibit-revolutions.
+VmathNumber vmath_normalise_mbr(const VmathNumber mbr)
+{
+    const VmathNumber abs_mbr = (mbr < VMATHNUMBER_C(0.0)) ? -mbr : mbr;
+    return (mbr < VMATHNUMBER_C(0.0)) ? -mbr : mbr;//FIXME: ((-mbr) VMATHNUMBER_C(1024.0)
+}
+
+// Normalise radians.
+VmathNumber vmath_normalise_rad(const VmathNumber rad)
+{
+    const VmathNumber abs_rad = (rad < VMATHNUMBER_C(0.0)) ? -rad : rad;
+    return 666.0f;//FIXME: !!!
+}
+
+// Normalise degrees.
+VmathNumber vmath_normalise_deg(const VmathNumber deg)
+{
+    return 666.0f;//FIXME: !!!
+}
+
 
 
 // Normalise a matrix 3.

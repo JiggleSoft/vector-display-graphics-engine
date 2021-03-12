@@ -120,13 +120,29 @@ extern VmathNumber vmath_rad_to_deg(const VmathNumber deg);
 
 
 //-----------------------------------------------------------------------------
+// Angle Normalisation Functions.
+// Millibit-revolutions (mbr), Radians (rad), and Degrees (deg).
+// Note: 360 degrees = 1024 millibit-revolutions.
+//-----------------------------------------------------------------------------
+
+// Normalise millibit-revolutions.
+extern VmathNumber vmath_normalise_mbr(const VmathNumber mbr);
+
+// Normalise radians.
+extern VmathNumber vmath_normalise_rad(const VmathNumber rad);
+
+// Normalise degrees.
+extern VmathNumber vmath_normalise_deg(const VmathNumber deg);
+
+
+//-----------------------------------------------------------------------------
 // Co-ordinate Conversion Functions.
 //-----------------------------------------------------------------------------
 
 // Normalise a 3x1 matrix to unit length..
 extern void vmath_matrix3x1_normalise(VmathMatrix3x1 matrix);
 
-// Convert a 3x1 matrix od homogeneous co-ordinates to cartesian co-ordinates.
+// Convert a 3x1 matrix of homogeneous co-ordinates to cartesian co-ordinates.
 extern void vmath_matrix3x1_homogeneous_to_cartesian(VmathMatrix3x1 matrix);
 
 

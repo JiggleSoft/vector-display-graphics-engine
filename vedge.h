@@ -49,23 +49,34 @@
 // Vector Display Graphics Engine Types.
 //-----------------------------------------------------------------------------
 
-// Display details.
-typedef struct VedgeDisplayDetail {
-    // Drawable display width (pixels).
-    int width;
-    // Drawable display height (pixels).
-    int height;
-    // Display refresh frequancy (Hz).
-    int refresh_rate;
-};
+//// Display details.
+//typedef struct VedgeDisplayDetail {
+//    // Screen display's pixel width for current mode.
+//    int width;
+//    // Screen display pixel height for current mode.
+//    int height;
+//    // Screen display refresh frequency (Hz) for current mode.
+//    int refresh_rate;
+//};
+//
+//// Window details.
+//typedef struct VedgeWindowDetail {
+//    // Window client area width in pixels.
+//    int width;
+//    // Window client area height in pixels.
+//    int height;
+//};
+//
+//typedef struct VedgeConfig {
+//    int video_width;
+//    int video_height;
+//    int refresh_rate;
+//    int video_mode;
+//} VedgeConfig;
 
-// Window details.
-typedef struct VedgeWindowDetail {
-    // Number of pixels
-    int width;
-    int height;
-    // Number of physical pixels.
-};
+
+//funct* video_configurator.
+
 
 // Two dimensional point (x1,y1)
 typedef struct VedgePoint {
@@ -107,7 +118,7 @@ typedef struct VedgeLines {
 // Font glyph.
 typedef struct VedgeGlyph {
     int length;
-    VedgeLine lines[];
+    struct VedgeLine lines[];
 } VedgeGlyph;
 
 
@@ -142,6 +153,21 @@ typedef struct VedgeGameItem {
 //};
 //
 
+typedef struct VedgeGameObject VedgeGameObject;
+
+
+typedef struct VedgeGameObjectItems {
+    int length;
+    VedgeGameItem game_items[];
+
+} VedgeGameObjectItems;
+
+
+typedef struct VedgeGameObjectChildren {
+    int length;
+    VedgeGameObject * game_objects[];
+} VedgeGameObjectChildren;
+
 
 // Represents an object within the game.
 typedef struct VedgeGameObject {
@@ -151,10 +177,20 @@ typedef struct VedgeGameObject {
     VmathMatrix3x3 rotation;
     // The size of this object within the world.
     VmathMatrix3x3 scaling;
-    int length;
-    VedgeGameItem items[];
+    // Enablement.
+    _Bool enable;
+    // Optional application_data.
+    void * application_data;
+    // Optional game object items.
+    VedgeGameObjectItems * items;
+    // Optional children game objects.
+    VedgeGameObjectChildren * children;
 } VedgeGameObject;
 
+
+
+//int length;
+//VedgeGameItem items[];
 
 
 

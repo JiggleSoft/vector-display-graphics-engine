@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-01-24 19:27
-// Version:      0.0.1
+// Date:         2021-03-14 22:51
+// Version:      0.9.1
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -25,6 +25,8 @@
 
 #include <assert.h>
 #include <memory.h>
+#include <stdint.h>
+
 #include "vmath.h"
 
 
@@ -44,7 +46,7 @@ void vmath_init(void)
 {
     for (int i = 0;  i < 1024 * VMATH_SINCOS_PRECISION;  i++)
     {
-        vmath_millirev_lut[i] = sin(vmath_mbr_to_rad(i));
+        vmath_millirev_lut[i] = sin(vmath_mbr_to_rad(i / VMATH_SINCOS_PRECISION));
     }
 }
 
@@ -60,36 +62,30 @@ void vmath_done(void)
 // Millibit-revolution functions.
 VmathNumber vmath_mbr_sin(VmathNumber mbr)
 {
-    return vmath_millirev_lut[((int)(mbr + (0.5f))) % (1024 * VMATH_SINCOS_PRECISION)];
+    return vmath_millirev_lut[(int)(vmath_normalise_mbr(mbr) * VMATH_SINCOS_PRECISION)];
 }
 
 
 VmathNumber vmath_mbr_cos(VmathNumber mbr)
 {
-    return vmath_millirev_lut[((int)(mbr + (256.5f))) % (1024 * VMATH_SINCOS_PRECISION)];
+    return vmath_millirev_lut[(int)(vmath_normalise_mbr(mbr + VMATHNUMBER_C(256.0)) * VMATH_SINCOS_PRECISION)];
 }
 
 
 // .
 #define VMATH_MBR_PER_REV VMATHNUMBER_C(1024.0)
 // .
-#define VMATH_RAD_PER_REV VMATHNUMBER_C(VMATHNUMBER_2PI)
+#define VMATH_RAD_PER_REV VMATHNUMBER_2PI
 // .
 #define VMATH_DEG_PER_REV VMATHNUMBER_C(360.0)
 
 
-//VMATHNUMBER_2PI / VMATHNUMBER_C(1024.0)
-#define VMATH_MBR_PER_RAD (1)
-//(VMATHNUMBER_C( 1024.0 ) / VMATHNUMBER_C( 360.0 ));
-#define VMATH_MBR_PER_DEG (1)
-//VMATHNUMBER_2PI / VMATHNUMBER_C( 1024.0 );
-#define VMATH_RAD_PER_MBR (1)
-// (VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));;
-#define VMATH_RAD_PER_DEG (VMATHNUMBER_2PI / VMATHNUMBER_C(360.0))
-//(VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));
-#define VMATH_DEG_PER_MBR (1)
-//(VMATHNUMBER_C( 360.0 ) / VMATHNUMBER_C( 1024.0 ));;
-#define VMATH_DEG_PER_RAD (1)
+#define VMATH_MBR_PER_RAD (VMATH_MBR_PER_REV / VMATH_RAD_PER_REV)
+#define VMATH_MBR_PER_DEG (VMATH_MBR_PER_REV / VMATH_DEG_PER_REV)
+#define VMATH_RAD_PER_MBR (VMATH_RAD_PER_REV / VMATH_MBR_PER_REV)
+#define VMATH_RAD_PER_DEG (VMATH_RAD_PER_REV / VMATH_DEG_PER_REV)
+#define VMATH_DEG_PER_MBR (VMATH_DEG_PER_REV / VMATH_MBR_PER_REV)
+#define VMATH_DEG_PER_RAD (VMATH_DEG_PER_REV / VMATH_RAD_PER_REV)
 
 
 // Angle conversion functions; Millibit-revolutions (mbr) (1024 * mbr = 360 degrees), Radians (rad), Degrees (deg).
@@ -128,7 +124,7 @@ VmathNumber vmath_rad_to_deg(VmathNumber deg)
     return deg * VMATH_DEG_PER_RAD;
 }
 
-
+#include <stdio.h>
 //-----------------------------------------------------------------------------
 // Angle Normalisation Functions.
 //-----------------------------------------------------------------------------
@@ -136,33 +132,65 @@ VmathNumber vmath_rad_to_deg(VmathNumber deg)
 // Normalise millibit-revolutions.
 VmathNumber vmath_normalise_mbr(const VmathNumber mbr)
 {
-    const VmathNumber abs_mbr = (mbr < VMATHNUMBER_C(0.0)) ? -mbr : mbr;
-    return (mbr < VMATHNUMBER_C(0.0)) ? -mbr : mbr;//FIXME: ((-mbr) VMATHNUMBER_C(1024.0)
+    VmathNumber norm;
+    if (mbr < VMATHNUMBER_C(0.0)) {
+        norm = VMATH_MBR_PER_REV + fmodf(mbr, VMATH_MBR_PER_REV);
+    } else {
+        return fmodf(mbr, VMATH_MBR_PER_REV);
+    }
+    if (norm >= VMATH_MBR_PER_REV) { // Covers where fmodf(,) becomes negative 0.0 that would have yielded 360.0.
+        norm = VMATHNUMBER_C(0.0);
+    }
+    return norm;
 }
 
 // Normalise radians.
 VmathNumber vmath_normalise_rad(const VmathNumber rad)
 {
-    const VmathNumber abs_rad = (rad < VMATHNUMBER_C(0.0)) ? -rad : rad;
-    return 666.0f;//FIXME: !!!
+    VmathNumber norm;
+    if (rad < VMATHNUMBER_C(0.0)) {
+        norm = VMATH_RAD_PER_REV + fmodf(rad, VMATH_RAD_PER_REV);
+    } else {
+        return fmodf(rad, VMATH_RAD_PER_REV);
+    }
+    if (norm >= VMATH_RAD_PER_REV) { // Covers where fmodf(,) becomes negative 0.0 that would have yielded 360.0.
+        norm = VMATHNUMBER_C(0.0);
+    }
+    return norm;
 }
+
 
 // Normalise degrees.
 VmathNumber vmath_normalise_deg(const VmathNumber deg)
 {
-    return 666.0f;//FIXME: !!!
+    VmathNumber norm;
+    if (deg < VMATHNUMBER_C(0.0)) {
+        norm = VMATH_DEG_PER_REV + fmodf(deg, VMATH_DEG_PER_REV);
+    } else {
+        return fmodf(deg, VMATH_DEG_PER_REV);
+    }
+    if (norm >= VMATH_DEG_PER_REV) { // Covers where fmodf(,) becomes negative 0.0 that would have yielded 360.0.
+        norm = VMATHNUMBER_C(0.0);
+    }
+    return norm;
 }
 
 
 
-// Normalise a matrix 3.
+// Normalise a 3x1 matrix to unit length and convert to cartesian co-ordinates.
+void vmath_matrix3x1_normalise_to_cartesian(VmathMatrix3x1 matrix)
+{
+    vmath_matrix3x1_normalise(matrix);
+    vmath_matrix3x1_homogeneous_to_cartesian(matrix);
+}
+
+
+// Normalise a 3x1 matrix.
 void vmath_matrix3x1_normalise(VmathMatrix3x1 matrix)
 {
-    vmath_matrix3x1_homogeneous_to_cartesian(matrix);
     VmathNumber length = sqrt( (matrix[0] * matrix[0]) + (matrix[1] * matrix[1]));
     matrix[0] = matrix[0] / length;
     matrix[1] = matrix[1] / length;
-    // Already set by vmath_matrix3x1_homogeneous_to_cartesian - matrix[2] = VMATHNUMBER_C( 1.0 );
 }
 
 
@@ -170,7 +198,7 @@ void vmath_matrix3x1_homogeneous_to_cartesian(VmathMatrix3x1 matrix)
 {
     matrix[0] = matrix[0] / matrix[2];
     matrix[1] = matrix[1] / matrix[2];
-    matrix[3] = VMATHNUMBER_C( 1.0 );
+    matrix[2] = VMATHNUMBER_C( 1.0 );
 }
 
 

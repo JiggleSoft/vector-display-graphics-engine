@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-14 22:51
-// Version:      0.9.1
+// Date:         2021-03-15 18:27
+// Version:      0.9.2
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -223,19 +223,20 @@ extern void vmath_matrix3x3_upd_shear_x_and_y_direction(VmathMatrix3x3 matrix, c
 // Matrix Multiplication.
 //-----------------------------------------------------------------------------
 
-// Multiply a 3x3 matrix by another 3x3 matrix storing the result into another 3x3 matrix.
+// Multiply a 3x3 matrix by a 3x3 matrix storing the result into a 3x3 matrix (matrix1 and matrix2 must not equal result).
+extern void vmath_matrix3x3_multiply_matrix3x3_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result);
+
+
+// Multiply a 3x3 matrix by a 3x3 matrix storing the result into a 3x3 matrix (matrix1 or matrix2 may equal result).
 extern void vmath_matrix3x3_multiply_matrix3x3(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result);
 
-//TODO: implementation and test.
-//// Multiply a 3x3 matrix by another 3x3 matrix storing the result into either matrix1 or matrix2..
-//extern void vmath_matrix3x3_multiply_matrix3x3_safe(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, const _Bool result_matrix2);
 
-// Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix.
+// Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix (matrix2 must not equal result).
+extern void vmath_matrix3x3_multiply_matrix3x1_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result);
+
+
+// Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix (matrix2 may equal result).
 extern void vmath_matrix3x3_multiply_matrix3x1(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result);
-
-//TODO: implementation and test.
-//// Multiply a 3x3 matrix by a 3x1 matrix storing the result into the 3x1 matrix.
-//extern void vmath_matrix3x3_multiply_matrix3x1_safe(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2);
 
 
 

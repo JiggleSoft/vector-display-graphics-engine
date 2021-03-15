@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-14 22:51
-// Version:      0.9.1
+// Date:         2021-03-15 18:27
+// Version:      0.9.2
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -25,21 +25,31 @@
 
 #include <assert.h>
 #include <memory.h>
-#include <stdint.h>
 
 #include "vmath.h"
 
 
+//-----------------------------------------------------------------------------
+// .
+//-----------------------------------------------------------------------------
 
+// .
 #ifndef VMATH_SINCOS_PRECISION
 #define VMATH_SINCOS_PRECISION 4
 #endif
 
 
-// Millibit-revolution look up table
+//-----------------------------------------------------------------------------
+// .
+//-----------------------------------------------------------------------------
+
+// Millibit-revolution look up table.
 static VmathNumber vmath_millirev_lut[1024 * VMATH_SINCOS_PRECISION];
 
 
+//-----------------------------------------------------------------------------
+// Library life-cycle methods.
+//-----------------------------------------------------------------------------
 
 // Initialise math library.
 void vmath_init(void)
@@ -58,6 +68,9 @@ void vmath_done(void)
 }
 
 
+//-----------------------------------------------------------------------------
+// Trigonometry Functions.
+//-----------------------------------------------------------------------------
 
 // Millibit-revolution functions.
 VmathNumber vmath_mbr_sin(VmathNumber mbr)
@@ -72,23 +85,35 @@ VmathNumber vmath_mbr_cos(VmathNumber mbr)
 }
 
 
-// .
+//-----------------------------------------------------------------------------
+// Full Rotation and Angle Measurement Type Ratio Constants.
+//-----------------------------------------------------------------------------
+
+// Milli-bit revolutions per full revolution.
 #define VMATH_MBR_PER_REV VMATHNUMBER_C(1024.0)
-// .
+// Radians per full revolution.
 #define VMATH_RAD_PER_REV VMATHNUMBER_2PI
-// .
+// Radians per full revolution.
 #define VMATH_DEG_PER_REV VMATHNUMBER_C(360.0)
 
-
+// Milli-bit revolutions per radian.
 #define VMATH_MBR_PER_RAD (VMATH_MBR_PER_REV / VMATH_RAD_PER_REV)
+// Milli-bit revolutions per degree.
 #define VMATH_MBR_PER_DEG (VMATH_MBR_PER_REV / VMATH_DEG_PER_REV)
+// Radians per Milli-bit revolution.
 #define VMATH_RAD_PER_MBR (VMATH_RAD_PER_REV / VMATH_MBR_PER_REV)
+// Radians per degree.
 #define VMATH_RAD_PER_DEG (VMATH_RAD_PER_REV / VMATH_DEG_PER_REV)
+// Degrees per Milli-bit revolution.
 #define VMATH_DEG_PER_MBR (VMATH_DEG_PER_REV / VMATH_MBR_PER_REV)
+// Degrees per radian.
 #define VMATH_DEG_PER_RAD (VMATH_DEG_PER_REV / VMATH_RAD_PER_REV)
 
 
-// Angle conversion functions; Millibit-revolutions (mbr) (1024 * mbr = 360 degrees), Radians (rad), Degrees (deg).
+//-----------------------------------------------------------------------------
+// Angle Conversion Functions.
+//-----------------------------------------------------------------------------
+
 VmathNumber vmath_rad_to_mbr(VmathNumber rad)
 {
     return rad * VMATH_MBR_PER_RAD;
@@ -124,7 +149,7 @@ VmathNumber vmath_rad_to_deg(VmathNumber deg)
     return deg * VMATH_DEG_PER_RAD;
 }
 
-#include <stdio.h>
+
 //-----------------------------------------------------------------------------
 // Angle Normalisation Functions.
 //-----------------------------------------------------------------------------
@@ -132,29 +157,20 @@ VmathNumber vmath_rad_to_deg(VmathNumber deg)
 // Normalise millibit-revolutions.
 VmathNumber vmath_normalise_mbr(const VmathNumber mbr)
 {
-    VmathNumber norm;
-    if (mbr < VMATHNUMBER_C(0.0)) {
-        norm = VMATH_MBR_PER_REV + fmodf(mbr, VMATH_MBR_PER_REV);
-    } else {
-        return fmodf(mbr, VMATH_MBR_PER_REV);
-    }
-    if (norm >= VMATH_MBR_PER_REV) { // Covers where fmodf(,) becomes negative 0.0 that would have yielded 360.0.
-        norm = VMATHNUMBER_C(0.0);
+    VmathNumber norm = fmodf(mbr, VMATH_MBR_PER_REV);
+    if (norm < VMATHNUMBER_C(0.0)) {
+        return VMATH_MBR_PER_REV + norm;
     }
     return norm;
 }
 
+
 // Normalise radians.
 VmathNumber vmath_normalise_rad(const VmathNumber rad)
 {
-    VmathNumber norm;
-    if (rad < VMATHNUMBER_C(0.0)) {
-        norm = VMATH_RAD_PER_REV + fmodf(rad, VMATH_RAD_PER_REV);
-    } else {
-        return fmodf(rad, VMATH_RAD_PER_REV);
-    }
-    if (norm >= VMATH_RAD_PER_REV) { // Covers where fmodf(,) becomes negative 0.0 that would have yielded 360.0.
-        norm = VMATHNUMBER_C(0.0);
+    VmathNumber norm = fmodf(rad, VMATH_RAD_PER_REV);
+    if (norm < VMATHNUMBER_C(0.0)) {
+        return VMATH_RAD_PER_REV + norm;
     }
     return norm;
 }
@@ -163,19 +179,17 @@ VmathNumber vmath_normalise_rad(const VmathNumber rad)
 // Normalise degrees.
 VmathNumber vmath_normalise_deg(const VmathNumber deg)
 {
-    VmathNumber norm;
-    if (deg < VMATHNUMBER_C(0.0)) {
-        norm = VMATH_DEG_PER_REV + fmodf(deg, VMATH_DEG_PER_REV);
-    } else {
-        return fmodf(deg, VMATH_DEG_PER_REV);
-    }
-    if (norm >= VMATH_DEG_PER_REV) { // Covers where fmodf(,) becomes negative 0.0 that would have yielded 360.0.
-        norm = VMATHNUMBER_C(0.0);
+    VmathNumber norm = fmodf(deg, VMATH_DEG_PER_REV);
+    if (norm < VMATHNUMBER_C(0.0)) {
+        return VMATH_DEG_PER_REV + norm;
     }
     return norm;
 }
 
 
+//-----------------------------------------------------------------------------
+// Co-ordinate Conversion Functions.
+//-----------------------------------------------------------------------------
 
 // Normalise a 3x1 matrix to unit length and convert to cartesian co-ordinates.
 void vmath_matrix3x1_normalise_to_cartesian(VmathMatrix3x1 matrix)
@@ -201,6 +215,10 @@ void vmath_matrix3x1_homogeneous_to_cartesian(VmathMatrix3x1 matrix)
     matrix[2] = VMATHNUMBER_C( 1.0 );
 }
 
+
+//-----------------------------------------------------------------------------
+// Set a 3x3 Matrix With a Chosen Transformation.
+//-----------------------------------------------------------------------------
 
 // Set a 3 x 3 matrix with a transformation.
 void vmath_matrix3x3_set_identity(VmathMatrix3x3 matrix)
@@ -312,6 +330,10 @@ void vmath_matrix3x3_set_shear_x_and_y_direction(VmathMatrix3x3 matrix, const Vm
 }
 
 
+//-----------------------------------------------------------------------------
+// Update a Previously Set 3x3 Matrix Transformation With New Values.
+//-----------------------------------------------------------------------------
+
 // Update a 3 x 3 matrix with a transformation.
 void vmath_matrix3x3_upd_translation(VmathMatrix3x3 matrix, const VmathNumber tx, const VmathNumber ty)
 {
@@ -366,55 +388,79 @@ void vmath_matrix3x3_upd_shear_x_and_y_direction(VmathMatrix3x3 matrix, const Vm
 
 
 
-// Multiply matrices.
+//-----------------------------------------------------------------------------
+// Matrix Multiplication.
+//-----------------------------------------------------------------------------
+
+// Multiply a 3x3 matrix by a 3x3 matrix storing the result into a 3x3 matrix (matrix1 and matrix2 must not equal result).
+void vmath_matrix3x3_multiply_matrix3x3_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result)
+{
+    assert((result != matrix1) && (result != matrix2));
+    result[0][0] = (matrix1[0][0] * matrix2[0][0]) + (matrix1[0][1] * matrix2[1][0]) + (matrix1[0][2] * matrix2[2][0]);
+    result[0][1] = (matrix1[0][0] * matrix2[0][1]) + (matrix1[0][1] * matrix2[1][1]) + (matrix1[0][2] * matrix2[2][1]);
+    result[0][2] = (matrix1[0][0] * matrix2[0][2]) + (matrix1[0][1] * matrix2[1][2]) + (matrix1[0][2] * matrix2[2][2]);
+    result[1][0] = (matrix1[1][0] * matrix2[0][0]) + (matrix1[1][1] * matrix2[1][0]) + (matrix1[1][2] * matrix2[2][0]);
+    result[1][1] = (matrix1[1][0] * matrix2[0][1]) + (matrix1[1][1] * matrix2[1][1]) + (matrix1[1][2] * matrix2[2][1]);
+    result[1][2] = (matrix1[1][0] * matrix2[0][2]) + (matrix1[1][1] * matrix2[1][2]) + (matrix1[1][2] * matrix2[2][2]);
+    result[2][0] = (matrix1[2][0] * matrix2[0][0]) + (matrix1[2][1] * matrix2[1][0]) + (matrix1[2][2] * matrix2[2][0]);
+    result[2][1] = (matrix1[2][0] * matrix2[0][1]) + (matrix1[2][1] * matrix2[1][1]) + (matrix1[2][2] * matrix2[2][1]);
+    result[2][2] = (matrix1[2][0] * matrix2[0][2]) + (matrix1[2][1] * matrix2[1][2]) + (matrix1[2][2] * matrix2[2][2]);
+}
+
+
+// Multiply a 3x3 matrix by a 3x3 matrix storing the result into a 3x3 matrix (matrix1 or matrix2 may equal result).
 void vmath_matrix3x3_multiply_matrix3x3(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result)
 {
-    assert(result != matrix1 && result != matrix2);
-    result[0][0] = (matrix1[0][0] * matrix2[0][0]) + (matrix1[0][1] * matrix2[1][0]) + (matrix1[0][2] * matrix2[2][0]);
-    result[0][1] = (matrix1[0][0] * matrix2[0][1]) + (matrix1[0][1] * matrix2[1][1]) + (matrix1[0][2] * matrix2[2][1]);
-    result[0][2] = (matrix1[0][0] * matrix2[0][2]) + (matrix1[0][1] * matrix2[1][2]) + (matrix1[0][2] * matrix2[2][2]);
-    result[1][0] = (matrix1[1][0] * matrix2[0][0]) + (matrix1[1][1] * matrix2[1][0]) + (matrix1[1][2] * matrix2[2][0]);
-    result[1][1] = (matrix1[1][0] * matrix2[0][1]) + (matrix1[1][1] * matrix2[1][1]) + (matrix1[1][2] * matrix2[2][1]);
-    result[1][2] = (matrix1[1][0] * matrix2[0][2]) + (matrix1[1][1] * matrix2[1][2]) + (matrix1[1][2] * matrix2[2][2]);
-    result[2][0] = (matrix1[2][0] * matrix2[0][0]) + (matrix1[2][1] * matrix2[1][0]) + (matrix1[2][2] * matrix2[2][0]);
-    result[2][1] = (matrix1[2][0] * matrix2[0][1]) + (matrix1[2][1] * matrix2[1][1]) + (matrix1[2][2] * matrix2[2][1]);
-    result[2][2] = (matrix1[2][0] * matrix2[0][2]) + (matrix1[2][1] * matrix2[1][2]) + (matrix1[2][2] * matrix2[2][2]);
+    if ((matrix2 == result) || (matrix1 == result)) {
+        VmathMatrix3x3 temp_result;
+        temp_result[0][0] = (matrix1[0][0] * matrix2[0][0]) + (matrix1[0][1] * matrix2[1][0]) + (matrix1[0][2] * matrix2[2][0]);
+        temp_result[0][1] = (matrix1[0][0] * matrix2[0][1]) + (matrix1[0][1] * matrix2[1][1]) + (matrix1[0][2] * matrix2[2][1]);
+        temp_result[0][2] = (matrix1[0][0] * matrix2[0][2]) + (matrix1[0][1] * matrix2[1][2]) + (matrix1[0][2] * matrix2[2][2]);
+        temp_result[1][0] = (matrix1[1][0] * matrix2[0][0]) + (matrix1[1][1] * matrix2[1][0]) + (matrix1[1][2] * matrix2[2][0]);
+        temp_result[1][1] = (matrix1[1][0] * matrix2[0][1]) + (matrix1[1][1] * matrix2[1][1]) + (matrix1[1][2] * matrix2[2][1]);
+        temp_result[1][2] = (matrix1[1][0] * matrix2[0][2]) + (matrix1[1][1] * matrix2[1][2]) + (matrix1[1][2] * matrix2[2][2]);
+        temp_result[2][0] = (matrix1[2][0] * matrix2[0][0]) + (matrix1[2][1] * matrix2[1][0]) + (matrix1[2][2] * matrix2[2][0]);
+        temp_result[2][1] = (matrix1[2][0] * matrix2[0][1]) + (matrix1[2][1] * matrix2[1][1]) + (matrix1[2][2] * matrix2[2][1]);
+        temp_result[2][2] = (matrix1[2][0] * matrix2[0][2]) + (matrix1[2][1] * matrix2[1][2]) + (matrix1[2][2] * matrix2[2][2]);
+        memcpy(matrix2 == result ? matrix2 : matrix1, temp_result, sizeof(temp_result));
+    } else {
+        result[0][0] = (matrix1[0][0] * matrix2[0][0]) + (matrix1[0][1] * matrix2[1][0]) + (matrix1[0][2] * matrix2[2][0]);
+        result[0][1] = (matrix1[0][0] * matrix2[0][1]) + (matrix1[0][1] * matrix2[1][1]) + (matrix1[0][2] * matrix2[2][1]);
+        result[0][2] = (matrix1[0][0] * matrix2[0][2]) + (matrix1[0][1] * matrix2[1][2]) + (matrix1[0][2] * matrix2[2][2]);
+        result[1][0] = (matrix1[1][0] * matrix2[0][0]) + (matrix1[1][1] * matrix2[1][0]) + (matrix1[1][2] * matrix2[2][0]);
+        result[1][1] = (matrix1[1][0] * matrix2[0][1]) + (matrix1[1][1] * matrix2[1][1]) + (matrix1[1][2] * matrix2[2][1]);
+        result[1][2] = (matrix1[1][0] * matrix2[0][2]) + (matrix1[1][1] * matrix2[1][2]) + (matrix1[1][2] * matrix2[2][2]);
+        result[2][0] = (matrix1[2][0] * matrix2[0][0]) + (matrix1[2][1] * matrix2[1][0]) + (matrix1[2][2] * matrix2[2][0]);
+        result[2][1] = (matrix1[2][0] * matrix2[0][1]) + (matrix1[2][1] * matrix2[1][1]) + (matrix1[2][2] * matrix2[2][1]);
+        result[2][2] = (matrix1[2][0] * matrix2[0][2]) + (matrix1[2][1] * matrix2[1][2]) + (matrix1[2][2] * matrix2[2][2]);
+    }
 }
 
-// Multiply a 3x3 matrix by another 3x3 matrix storing the result into either matrix1 or matrix2..
-void vmath_matrix3x3_multiply_matrix3x3_safe (const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, const _Bool result_matrix2)
+
+// Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix (matrix2 must not equal result).
+void vmath_matrix3x3_multiply_matrix3x1_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result)
 {
-    VmathMatrix3x3 result;
-    result[0][0] = (matrix1[0][0] * matrix2[0][0]) + (matrix1[0][1] * matrix2[1][0]) + (matrix1[0][2] * matrix2[2][0]);
-    result[0][1] = (matrix1[0][0] * matrix2[0][1]) + (matrix1[0][1] * matrix2[1][1]) + (matrix1[0][2] * matrix2[2][1]);
-    result[0][2] = (matrix1[0][0] * matrix2[0][2]) + (matrix1[0][1] * matrix2[1][2]) + (matrix1[0][2] * matrix2[2][2]);
-    result[1][0] = (matrix1[1][0] * matrix2[0][0]) + (matrix1[1][1] * matrix2[1][0]) + (matrix1[1][2] * matrix2[2][0]);
-    result[1][1] = (matrix1[1][0] * matrix2[0][1]) + (matrix1[1][1] * matrix2[1][1]) + (matrix1[1][2] * matrix2[2][1]);
-    result[1][2] = (matrix1[1][0] * matrix2[0][2]) + (matrix1[1][1] * matrix2[1][2]) + (matrix1[1][2] * matrix2[2][2]);
-    result[2][0] = (matrix1[2][0] * matrix2[0][0]) + (matrix1[2][1] * matrix2[1][0]) + (matrix1[2][2] * matrix2[2][0]);
-    result[2][1] = (matrix1[2][0] * matrix2[0][1]) + (matrix1[2][1] * matrix2[1][1]) + (matrix1[2][2] * matrix2[2][1]);
-    result[2][2] = (matrix1[2][0] * matrix2[0][2]) + (matrix1[2][1] * matrix2[1][2]) + (matrix1[2][2] * matrix2[2][2]);
-    memcpy(result_matrix2 ? matrix2 : matrix1, result, sizeof(result));
+    assert(result != matrix2);
+    result[0] = (matrix1[0][0] * matrix2[0]) + (matrix1[0][1] * matrix2[1]) + (matrix1[0][2] * matrix2[2]);
+    result[1] = (matrix1[1][0] * matrix2[0]) + (matrix1[1][1] * matrix2[1]) + (matrix1[1][2] * matrix2[2]);
+    result[2] = (matrix1[2][0] * matrix2[0]) + (matrix1[2][1] * matrix2[1]) + (matrix1[2][2] * matrix2[2]);
 }
 
 
-// Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix.
+// Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix (matrix2 may equal result).
 void vmath_matrix3x3_multiply_matrix3x1(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result)
 {
-    assert(result != matrix1 && result != matrix2);
-    result[0] = (matrix1[0][0] * matrix2[0]) + (matrix1[0][1] * matrix2[1]) + (matrix1[0][2] * matrix2[2]);
-    result[1] = (matrix1[1][0] * matrix2[0]) + (matrix1[1][1] * matrix2[1]) + (matrix1[1][2] * matrix2[2]);
-    result[2] = (matrix1[2][0] * matrix2[0]) + (matrix1[2][1] * matrix2[1]) + (matrix1[2][2] * matrix2[2]);
-}
-
-// Multiply a 3x3 matrix by a 3x1 matrix storing the result into the 3x1 matrix.
-void vmath_matrix3x3_multiply_matrix3x1_safe(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2)
-{
-    VmathMatrix3x1 result;
-    result[0] = (matrix1[0][0] * matrix2[0]) + (matrix1[0][1] * matrix2[1]) + (matrix1[0][2] * matrix2[2]);
-    result[1] = (matrix1[1][0] * matrix2[0]) + (matrix1[1][1] * matrix2[1]) + (matrix1[1][2] * matrix2[2]);
-    result[2] = (matrix1[2][0] * matrix2[0]) + (matrix1[2][1] * matrix2[1]) + (matrix1[2][2] * matrix2[2]);
-    memcpy(matrix2, result, sizeof(result));
+    if (matrix2 == result) {
+        VmathMatrix3x1 temp_result;
+        temp_result[0] = (matrix1[0][0] * matrix2[0]) + (matrix1[0][1] * matrix2[1]) + (matrix1[0][2] * matrix2[2]);
+        temp_result[1] = (matrix1[1][0] * matrix2[0]) + (matrix1[1][1] * matrix2[1]) + (matrix1[1][2] * matrix2[2]);
+        temp_result[2] = (matrix1[2][0] * matrix2[0]) + (matrix1[2][1] * matrix2[1]) + (matrix1[2][2] * matrix2[2]);
+        memcpy(matrix2, temp_result, sizeof(temp_result));
+    } else {
+        result[0] = (matrix1[0][0] * matrix2[0]) + (matrix1[0][1] * matrix2[1]) + (matrix1[0][2] * matrix2[2]);
+        result[1] = (matrix1[1][0] * matrix2[0]) + (matrix1[1][1] * matrix2[1]) + (matrix1[1][2] * matrix2[2]);
+        result[2] = (matrix1[2][0] * matrix2[0]) + (matrix1[2][1] * matrix2[1]) + (matrix1[2][2] * matrix2[2]);
+    }
 }
 
 

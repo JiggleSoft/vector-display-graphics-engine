@@ -26,57 +26,114 @@
 #define __VEDGE__H__
 
 
+#include <stdbool.h>
+
 #include <SDL.h>
+
+#include "sdl2boot.h"
 
 #include "vmath.h"
 #include "vdraw.h"
 
 
+
 //-----------------------------------------------------------------------------
-// Constants.
+// Engine Version and Title Constants.
 //-----------------------------------------------------------------------------
 
-// Error Codes
-#define VEDGE_NO_ERROR (0)
-#define VEDGE_ERR_NULL_CONTEXT (1)
+#define VEDGE_VERSION "0.0.0.0-beta-0"
 
-// Error message maximum size (includes NUL terminator).
-#define VDRAW_ERROR_MESSAGE_LENGTH_MAX (256)
+#define VEDGE_TITLE "Powered by vEDGE version " VEDGE_VERSION \
+                    " by Justin Lane (https://github.com/JiggleSoft/vector-display-graphics-engine/)."                        \
+                    " Using SDL 2 library (https://www.libsdl.org/)."
 
+
+//-----------------------------------------------------------------------------
+// Engine Constants.
+//-----------------------------------------------------------------------------
+
+// .
+#define VEDGE_SDL_INIT (SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK)
+
+// .
+#define VEDGE_SDL_WINDOW_FLAGS (SDL_WINDOW_FULLSCREEN_DESKTOP)
+
+// .
+#define VEDGE_SDL_RENDERER_FLAGS (SDL_RENDERER_SOFTWARE)
+
+
+//-----------------------------------------------------------------------------
+// Configuration, State, and Context Data Types.
+//-----------------------------------------------------------------------------
+
+// Initialisation configuration.
+typedef struct VedgeConfig {
+    SDL_Window * sdl_window;
+    SDL_Renderer * sdl_renderer;
+} VedgeConfig;
+
+
+// Initial state.
+typedef struct VedgeState {
+    // Has vmath_init been called successfully?
+    bool vmath_initialised;
+    // The private vdraw context.
+    VdrawContext private_vdraw_context;
+    // Pointer to the vdraw context or NULL (not successfully initialised).
+    VdrawContext * vdraw_context;
+    // vEdge iniitialised successfully.
+    bool initialised;
+} VedgeState;
+
+
+// Engine context (access via API functions only or macros only).
+typedef struct VedgeContext {
+    VedgeConfig config;
+    VedgeState  state;
+} VedgeContext;
+
+
+//-----------------------------------------------------------------------------
+// Configuration Functions.
+//-----------------------------------------------------------------------------
+
+// Initialise an init config from defaults (template_config == NULL) or
+// by a supplied template_config.
+void vedge_config_template(VedgeConfig * vedge_config,
+                           const VedgeConfig * template_vedge_config);
+
+
+// .
+void vedge_config_sdl2boot(VedgeConfig * vedge_config,
+                           const Sdl2BootContext * sdl2boot);
+
+
+//-----------------------------------------------------------------------------
+// Lifecycle Management Functions.
+//-----------------------------------------------------------------------------
+
+// Initialise the engine context.
+bool vedge_init(VedgeContext * vedge, const VedgeConfig * vedge_config);
+
+// Clean-up the engine context.
+void vedge_done(VedgeContext * vedge);
+
+
+//-----------------------------------------------------------------------------
+// Vector Display Graphics Engine Main Loop and Event Processing.
+//-----------------------------------------------------------------------------
+
+// .
+typedef int * (dd)();
+
+
+// .
+int vedge_run(VedgeContext * vedge);
 
 
 //-----------------------------------------------------------------------------
 // Vector Display Graphics Engine Types.
 //-----------------------------------------------------------------------------
-
-//// Display details.
-//typedef struct VedgeDisplayDetail {
-//    // Screen display's pixel width for current mode.
-//    int width;
-//    // Screen display pixel height for current mode.
-//    int height;
-//    // Screen display refresh frequency (Hz) for current mode.
-//    int refresh_rate;
-//};
-//
-//// Window details.
-//typedef struct VedgeWindowDetail {
-//    // Window client area width in pixels.
-//    int width;
-//    // Window client area height in pixels.
-//    int height;
-//};
-//
-//typedef struct VedgeConfig {
-//    int video_width;
-//    int video_height;
-//    int refresh_rate;
-//    int video_mode;
-//} VedgeConfig;
-
-
-//funct* video_configurator.
-
 
 // Two dimensional point (x1,y1)
 typedef struct VedgePoint {
@@ -103,7 +160,7 @@ typedef struct VedgePoints {
 
 // Array of two dimensional points.
 typedef struct VedgePath {
-    _Bool closed;
+    bool closed;
     VedgePoints points[];
 } VedgePath;
 
@@ -128,6 +185,30 @@ typedef struct VedgeGlyph {
 //    char * characters;
 //};
 
+// Item types.
+typedef enum ItemType {
+    // Single point.
+    POINT,
+    // A line
+    LINE,
+    // A single characters.
+    CHAR,
+    // A collection of dots.
+    POINTS,
+    // A collection of points joined together with lines that make up a continuous path.
+    LINEPATH,
+    // A collection of lines.
+    LINES,
+    // A string of text.
+    STRING,
+    // A collection of points joined together with lines that make up a continuous path.
+    //  LinePath,
+    //FXME: description and name.
+    //  VertsLines,
+    // Child game objects.
+    GameObjects
+} ItemType;
+
 //
 typedef union VedgeGameItemVariant {
     VedgePoint       * point;
@@ -139,7 +220,7 @@ typedef union VedgeGameItemVariant {
 
 //
 typedef struct VedgeGameItem {
-    int type;
+    ItemType type;
     VedgeGameItemVariant game_item;
 } VedgeGameItem;
 
@@ -178,7 +259,7 @@ typedef struct VedgeGameObject {
     // The size of this object within the world.
     VmathMatrix3x3 scaling;
     // Enablement.
-    _Bool enable;
+    bool enable;
     // Optional application_data.
     void * application_data;
     // Optional game object items.
@@ -188,102 +269,6 @@ typedef struct VedgeGameObject {
 } VedgeGameObject;
 
 
-
-//int length;
-//VedgeGameItem items[];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//// List of two dimensional points.
-//typedef struct VedgeGlyph {
-//    char character;
-//    VmathNumber x1;
-//    VmathNumber y1;
-//    char character;
-//    int length;
-//    VedgePoint dots[];
-//} VedgePath;
-//
-
-
-
-
-//
-////
-////groups of variant type+thing
-//
-//
-//// List of two dimensional points.
-//typedef struct VedgePoints {
-//    int length;
-//    VedgePoint dots[];
-//} VedgePoints;
-//
-//
-//// List of two dimensional lines.
-//typedef struct VedgeLines {
-//    int length;
-//    VedgeLine lines[];
-//} VedgeLines;
-//
-
-
-
-
-
-// Engine context (access via API functions only).
-typedef struct VedgeContext {
-    VdrawContext * vdraw_context;
-    SDL_Renderer * sdl_renderer;
-    VdrawContext private_vdraw_context;
-    int vedge_error_code;
-    char * vedge_error_message;
-    char private_vdraw_error_message[VDRAW_ERROR_MESSAGE_LENGTH_MAX+1];
-} VedgeContext;
-
-
-
-//-----------------------------------------------------------------------------
-// Lifecycle Management Functions.
-//-----------------------------------------------------------------------------
-
-// Initialise the engine context.
-extern int vedge_init(VedgeContext * context, SDL_Renderer * sdl_renderer);
-
-// Clean-up the engine context.
-extern void vedge_done(VedgeContext * vedge);
-
-
-
-//-----------------------------------------------------------------------------
-// Error Handling Functions.
-//-----------------------------------------------------------------------------
-
-// Clear the last error code.
-void vedge_clear_error_code(VedgeContext *vedge);
-
-// Get the last error code.
-int vedge_get_error_code(const VedgeContext *vedge);
-
-// Get the last error message.
-const char * vedge_get_error_message(const VedgeContext *vedge);
 
 
 
@@ -298,69 +283,7 @@ void vedge_frame_start(VedgeContext * context);
 void vedge_frame_finish(VedgeContext * context);
 
 
-void vedge_frame_add_game_object(VedgeContext * context, const VedgeGameObject game_object);
-
-
-
-
-
-
-
-
-
-
-
-//// Item types.
-//enum ItemType {
-//    // Single point.
-//    Dot,
-//    // A line
-//    Line,
-//    // A single characters.
-//    Char,
-//    // A collection of dots.
-//    Dots,
-//    // A collection of points joined together with lines that make up a continuous path.
-//    LinePath,
-//    // A collection of lines.
-//    Lines,
-//    // A string of text.
-//    String,
-//    // A collection of points joined together with lines that make up a continuous path.
-//  //  LinePath,
-//    //FXME: description and name.
-//  //  VertsLines,
-//    // Child game objects.
-//    GameObjects
-//};
-//
-
-
-//typedef struct VedgeGroupItem {
-//} VedgeGroupItem;
-//
-//typedef struct  VedgeGroup {
-//
-//} VedgeGroup;
-//
-//
-//typedef int VEDGE_GROUP;
-
-
-
-//
-//
-//vedge_game_object_
-
-
-
-
-// Type Drawing Functions
-
-//void vedge_draw_point_type(VedgeContext *  context, VedgePoint point);
-//{
-    //FIXME: vedge_draw_point(context point.x, point.y);
-//}
+void vedge_frame_add_game_object(VedgeContext * context, const VedgeGameObject * game_object);
 
 
 

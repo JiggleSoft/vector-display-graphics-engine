@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-07 08:53
-// Version:      0.9.6
+// Date:         2021-03-25 17:16
+// Version:      1.0.0-beta-1
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -24,8 +24,8 @@
 
 
 #include <assert.h>
-#include "vfont.h"
 
+#include "vfont.h"
 #include "vfont-segs.h"
 
 

@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-15 18:27
-// Version:      0.9.2
+// Date:         2021-03-24 21:55
+// Version:      1.0.0-beta-1
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -75,10 +75,10 @@ typedef VmathNumber VmathMatrix3x3[3][3];
 //-----------------------------------------------------------------------------
 
 // Initialise math library.
-extern void vmath_init(void);
+void vmath_init(void);
 
 // Clean-up the math library.
-extern void vmath_done(void);
+void vmath_done(void);
 
 
 //-----------------------------------------------------------------------------
@@ -88,10 +88,10 @@ extern void vmath_done(void);
 //-----------------------------------------------------------------------------
 
 // Get the sine value for an angle specified in millibit-revolutions.
-extern VmathNumber vmath_mbr_sin(const VmathNumber mbr);
+VmathNumber vmath_mbr_sin(const VmathNumber mbr);
 
 // Get the cosine value for an angle specified in millibit-revolutions.
-extern VmathNumber vmath_mbr_cos(const VmathNumber mbr);
+VmathNumber vmath_mbr_cos(const VmathNumber mbr);
 
 
 //-----------------------------------------------------------------------------
@@ -101,22 +101,22 @@ extern VmathNumber vmath_mbr_cos(const VmathNumber mbr);
 //-----------------------------------------------------------------------------
 
 // Convert radians to millibit-revolutions.
-extern VmathNumber vmath_rad_to_mbr(const VmathNumber rad);
+VmathNumber vmath_rad_to_mbr(const VmathNumber rad);
 
 // Convert degrees to millibit-revolutions.
-extern VmathNumber vmath_deg_to_mbr(const VmathNumber deg);
+VmathNumber vmath_deg_to_mbr(const VmathNumber deg);
 
 // Convert millibit-revolutions to radians.
-extern VmathNumber vmath_mbr_to_rad(const VmathNumber mbr);
+VmathNumber vmath_mbr_to_rad(const VmathNumber mbr);
 
 // Convert degrees to radians.
-extern VmathNumber vmath_deg_to_rad(const VmathNumber deg);
+VmathNumber vmath_deg_to_rad(const VmathNumber deg);
 
 // Convert millibit-revolutions to degrees.
-extern VmathNumber vmath_mbr_to_deg(const VmathNumber mbr);
+VmathNumber vmath_mbr_to_deg(const VmathNumber mbr);
 
 // Convert radians to degrees.
-extern VmathNumber vmath_rad_to_deg(const VmathNumber deg);
+VmathNumber vmath_rad_to_deg(const VmathNumber deg);
 
 
 //-----------------------------------------------------------------------------
@@ -126,13 +126,13 @@ extern VmathNumber vmath_rad_to_deg(const VmathNumber deg);
 //-----------------------------------------------------------------------------
 
 // Normalise millibit-revolutions.
-extern VmathNumber vmath_normalise_mbr(const VmathNumber mbr);
+VmathNumber vmath_normalise_mbr(const VmathNumber mbr);
 
 // Normalise radians.
-extern VmathNumber vmath_normalise_rad(const VmathNumber rad);
+VmathNumber vmath_normalise_rad(const VmathNumber rad);
 
 // Normalise degrees.
-extern VmathNumber vmath_normalise_deg(const VmathNumber deg);
+VmathNumber vmath_normalise_deg(const VmathNumber deg);
 
 
 //-----------------------------------------------------------------------------
@@ -140,13 +140,13 @@ extern VmathNumber vmath_normalise_deg(const VmathNumber deg);
 //-----------------------------------------------------------------------------
 
 // Normalise a 3x1 matrix to unit length and convert to cartesian co-ordinates.
-extern void vmath_matrix3x1_normalise_to_cartesian(VmathMatrix3x1 matrix);
+void vmath_matrix3x1_normalise_to_cartesian(VmathMatrix3x1 matrix);
 
 // Normalise a 3x1 matrix to unit length.
-extern void vmath_matrix3x1_normalise(VmathMatrix3x1 matrix);
+void vmath_matrix3x1_normalise(VmathMatrix3x1 matrix);
 
 // Convert a 3x1 matrix of homogeneous co-ordinates to cartesian co-ordinates.
-extern void vmath_matrix3x1_homogeneous_to_cartesian(VmathMatrix3x1 matrix);
+void vmath_matrix3x1_homogeneous_to_cartesian(VmathMatrix3x1 matrix);
 
 
 //-----------------------------------------------------------------------------
@@ -154,43 +154,43 @@ extern void vmath_matrix3x1_homogeneous_to_cartesian(VmathMatrix3x1 matrix);
 //-----------------------------------------------------------------------------
 
 // Set a 3x3 matrix with its identity.
-extern void vmath_matrix3x3_set_identity(VmathMatrix3x3 matrix);
+void vmath_matrix3x3_set_identity(VmathMatrix3x3 matrix);
 
 // Set a 3x3 matrix with a translation value for both the  X and Y directions.
-extern void vmath_matrix3x3_set_translation(VmathMatrix3x3 matrix, const VmathNumber tx, const VmathNumber ty);
+void vmath_matrix3x3_set_translation(VmathMatrix3x3 matrix, const VmathNumber tx, const VmathNumber ty);
 
 // Set a 3x3 matrix with a scale value for both the X and Y directions.
-extern void vmath_matrix3x3_set_scaling(VmathMatrix3x3 matrix, const VmathNumber sx, const VmathNumber sy);
+void vmath_matrix3x3_set_scaling(VmathMatrix3x3 matrix, const VmathNumber sx, const VmathNumber sy);
 
 // Set a 3x3 matrix with a clockwise rotation in millibit-revolutions.
-extern void vmath_matrix3x3_set_rotation_clockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
+void vmath_matrix3x3_set_rotation_clockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
 
 // Set a 3x3 matrix with an anti-clockwise rotation in millibit-revolutions.
-extern void vmath_matrix3x3_set_rotation_anticlockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
+void vmath_matrix3x3_set_rotation_anticlockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
 
 // Set a 3x3 matrix with a reflection transform against the X axis.
-extern void vmath_matrix3x3_set_reflect_x(VmathMatrix3x3 matrix);
+void vmath_matrix3x3_set_reflect_x(VmathMatrix3x3 matrix);
 
 // Set a 3x3 matrix with a reflection transform against the Y axis.
-extern void vmath_matrix3x3_set_reflect_y(VmathMatrix3x3 matrix);
+void vmath_matrix3x3_set_reflect_y(VmathMatrix3x3 matrix);
 
 // Set a 3x3 matrix with a reflection transform about the origin (against both the X and Y axis).
-extern void vmath_matrix3x3_set_reflect_origin(VmathMatrix3x3 matrix);
+void vmath_matrix3x3_set_reflect_origin(VmathMatrix3x3 matrix);
 
 // Set a 3x3 matrix with a reflection transform about Y = X line.
-extern void vmath_matrix3x3_set_reflect_y_equals_x(VmathMatrix3x3 matrix);
+void vmath_matrix3x3_set_reflect_y_equals_x(VmathMatrix3x3 matrix);
 
 // Set a 3x3 matrix with a reflection transform about Y = -X line.
-extern void vmath_matrix3x3_set_reflect_y_equals_neg_x(VmathMatrix3x3 matrix);
+void vmath_matrix3x3_set_reflect_y_equals_neg_x(VmathMatrix3x3 matrix);
 
 // Set a 3x3 matrix with a shear transform in the X direction.
-extern void vmath_matrix3x3_set_shear_x_direction(VmathMatrix3x3 matrix, const VmathNumber shx);
+void vmath_matrix3x3_set_shear_x_direction(VmathMatrix3x3 matrix, const VmathNumber shx);
 
 // Set a 3x3 matrix with a shear transform in the Y direction.
-extern void vmath_matrix3x3_set_shear_y_direction(VmathMatrix3x3 matrix, const VmathNumber shy);
+void vmath_matrix3x3_set_shear_y_direction(VmathMatrix3x3 matrix, const VmathNumber shy);
 
 // Set a 3x3 matrix with a shear transform in both the X and Y directions.
-extern void vmath_matrix3x3_set_shear_x_and_y_direction(VmathMatrix3x3 matrix, const VmathNumber shx, const VmathNumber shy);
+void vmath_matrix3x3_set_shear_x_and_y_direction(VmathMatrix3x3 matrix, const VmathNumber shx, const VmathNumber shy);
 
 
 //-----------------------------------------------------------------------------
@@ -198,25 +198,25 @@ extern void vmath_matrix3x3_set_shear_x_and_y_direction(VmathMatrix3x3 matrix, c
 //-----------------------------------------------------------------------------
 
 // Update a previously set 3x3 matrix with a translation value for both the  X and Y directions.
-extern void vmath_matrix3x3_upd_translation(VmathMatrix3x3 matrix, const VmathNumber tx, const VmathNumber ty);
+void vmath_matrix3x3_upd_translation(VmathMatrix3x3 matrix, const VmathNumber tx, const VmathNumber ty);
 
 // Update a previously set 3x3 matrix with a scale value for both the X and Y directions.
-extern void vmath_matrix3x3_upd_scaling(VmathMatrix3x3 matrix, const VmathNumber sx, const VmathNumber sy);
+void vmath_matrix3x3_upd_scaling(VmathMatrix3x3 matrix, const VmathNumber sx, const VmathNumber sy);
 
 // Update a previously set 3x3 matrix with a clockwise rotation in millibit-revolutions.
-extern void vmath_matrix3x3_upd_rotation_clockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
+void vmath_matrix3x3_upd_rotation_clockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
 
 // Update a previously set 3x3 matrix with a anti-clockwise rotation in millibit-revolutions.
-extern void vmath_matrix3x3_upd_rotation_anticlockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
+void vmath_matrix3x3_upd_rotation_anticlockwise(VmathMatrix3x3 matrix, const VmathNumber mbr);
 
 // Update a previously set 3x3 matrix with a shear transform in the X direction.
-extern void vmath_matrix3x3_upd_shear_x_direction(VmathMatrix3x3 matrix, const VmathNumber shx);
+void vmath_matrix3x3_upd_shear_x_direction(VmathMatrix3x3 matrix, const VmathNumber shx);
 
 // Update a previously set 3x3 matrix with a shear transform in the Y direction.
-extern void vmath_matrix3x3_upd_shear_y_direction(VmathMatrix3x3 matrix, const VmathNumber shy);
+void vmath_matrix3x3_upd_shear_y_direction(VmathMatrix3x3 matrix, const VmathNumber shy);
 
 // Update a previously set 3x3 matrix with a shear transform in both the X and Y directions.
-extern void vmath_matrix3x3_upd_shear_x_and_y_direction(VmathMatrix3x3 matrix, const VmathNumber shx, const VmathNumber shy);
+void vmath_matrix3x3_upd_shear_x_and_y_direction(VmathMatrix3x3 matrix, const VmathNumber shx, const VmathNumber shy);
 
 
 //-----------------------------------------------------------------------------
@@ -224,19 +224,19 @@ extern void vmath_matrix3x3_upd_shear_x_and_y_direction(VmathMatrix3x3 matrix, c
 //-----------------------------------------------------------------------------
 
 // Multiply a 3x3 matrix by a 3x3 matrix storing the result into a 3x3 matrix (matrix1 and matrix2 must not equal result).
-extern void vmath_matrix3x3_multiply_matrix3x3_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result);
+void vmath_matrix3x3_multiply_matrix3x3_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result);
 
 
 // Multiply a 3x3 matrix by a 3x3 matrix storing the result into a 3x3 matrix (matrix1 or matrix2 may equal result).
-extern void vmath_matrix3x3_multiply_matrix3x3(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result);
+void vmath_matrix3x3_multiply_matrix3x3(VmathMatrix3x3 matrix1, VmathMatrix3x3 matrix2, VmathMatrix3x3 result);
 
 
 // Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix (matrix2 must not equal result).
-extern void vmath_matrix3x3_multiply_matrix3x1_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result);
+void vmath_matrix3x3_multiply_matrix3x1_fast(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result);
 
 
 // Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix (matrix2 may equal result).
-extern void vmath_matrix3x3_multiply_matrix3x1(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result);
+void vmath_matrix3x3_multiply_matrix3x1(const VmathMatrix3x3 matrix1, VmathMatrix3x1 matrix2, VmathMatrix3x1 result);
 
 
 

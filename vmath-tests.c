@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-15 18:27
-// Version:      0.9.2
+// Date:         2021-03-24 21:55
+// Version:      1.0.0-beta-1
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -21,6 +21,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //-----------------------------------------------------------------------------
+
 
 // API under test.
 #include "vmath.h"
@@ -39,18 +40,18 @@
 // Custom Vmath Test Utilities.
 //-----------------------------------------------------------------------------
 
-// .
+// Count of elements in a single dimension array.
 #define countof(a) (sizeof(a) / sizeof(a[0]))
 
 
-// .
+// Test two vmath numbers for equality.
 int is_vmathnumber_equal(const VmathNumber number1, const VmathNumber number2)
 {
     return (number1 == number2);
 }
 
 
-// .
+// Test two 3x1 matrices for equality.
 int is_matrix3x1_equal(const VmathMatrix3x1 matrix1, const VmathMatrix3x1 matrix2)
 {
     for (int x = 0;  x < 3;  x++) {
@@ -62,7 +63,7 @@ int is_matrix3x1_equal(const VmathMatrix3x1 matrix1, const VmathMatrix3x1 matrix
 }
 
 
-// .
+// Test two 3x1 matrices for equality with given tolerance.
 int is_matrix3x1_equal_tol(const VmathMatrix3x1 matrix1, const VmathMatrix3x1 matrix2, const double tol)
 {
     for (int x = 0;  x < 3;  x++) {
@@ -80,7 +81,7 @@ int is_matrix3x1_equal_tol(const VmathMatrix3x1 matrix1, const VmathMatrix3x1 ma
 }
 
 
-// .
+// Test two 3x3 matrices for equality.
 int is_matrix3x3_equal(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2)
 {
     for (int y = 0;  y < 3;  y++) {
@@ -94,7 +95,7 @@ int is_matrix3x3_equal(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix
 }
 
 
-// .
+// Test two 3x3 matrices for equality with given tolerance.
 int is_matrix3x3_equal_tol(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, const double tol)
 {
     for (int y = 0;  y < 3;  y++) {
@@ -119,27 +120,27 @@ int is_matrix3x3_equal_tol(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 ma
 // Custom Vmath Test Assertions Macros.
 //-----------------------------------------------------------------------------
 
-// .
+// Assertion function declaration and its client used macro.
 void assert_vmathnumber_equal(const VmathNumber exp, const VmathNumber real, const char* caller, int line);
 #define ASSERT_VMATHNUMBER_EQUAL(exp, real) assert_vmathnumber_equal(exp, real, __FILE__, __LINE__)
 
 
-// .
+// Assertion function declaration and its client used macro.
 void assert_matrix3x1_equal(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, const char* caller, int line);
 #define ASSERT_MATRIX3X1_EQUAL(exp, real) assert_matrix3x1_equal(exp, real, __FILE__, __LINE__)
 
 
-// .
+// Assertion function declaration and its client used macro.
 void assert_matrix3x1_equal_tol(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, const double tol, const char* caller, int line);
 #define ASSERT_MATRIX3X1_EQUAL_TOL(exp, real, tol) assert_matrix3x1_equal_tol(exp, real, tol, __FILE__, __LINE__)
 
 
-// .
+// Assertion function declaration and its client used macro.
 void assert_matrix3x3_equal(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const char* caller, int line);
 #define ASSERT_MATRIX3X3_EQUAL(exp, real) assert_matrix3x3_equal(exp, real, __FILE__, __LINE__)
 
 
-// .
+// Assertion function declaration and its client used macro.
 void assert_matrix3x3_equal_tol(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const double tol, const char* caller, int line);
 #define ASSERT_MATRIX3X3_EQUAL_TOL(exp, real, tol) assert_matrix3x3_equal_tol(exp, real, tol, __FILE__, __LINE__)
 
@@ -149,7 +150,7 @@ void assert_matrix3x3_equal_tol(const VmathMatrix3x3 exp, const VmathMatrix3x3 r
 // Custom Vmath Test Assertions Functions.
 //-----------------------------------------------------------------------------
 
-// .
+// Assertion function definition.
 void assert_vmathnumber_equal(const VmathNumber exp, const VmathNumber real, const char* caller, int line)
 {
     if (!is_vmathnumber_equal(exp, real)) {
@@ -158,7 +159,7 @@ void assert_vmathnumber_equal(const VmathNumber exp, const VmathNumber real, con
 }
 
 
-// .
+// Assertion function definition.
 void assert_matrix3x1_equal(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, const char* caller, int line)
 {
     if (!is_matrix3x1_equal(exp, real)) {
@@ -168,7 +169,7 @@ void assert_matrix3x1_equal(const VmathMatrix3x1 exp, const VmathMatrix3x1 real,
 }
 
 
-// .
+// Assertion function definition.
 void assert_matrix3x1_equal_tol(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, double tol, const char* caller, int line)
 {
     if (!is_matrix3x1_equal_tol(exp, real, tol)) {
@@ -178,7 +179,7 @@ void assert_matrix3x1_equal_tol(const VmathMatrix3x1 exp, const VmathMatrix3x1 r
 }
 
 
-// .
+// Assertion function definition.
 void assert_matrix3x3_equal(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const char* caller, int line)
 {
     if (!is_matrix3x3_equal(exp, real)) {
@@ -190,7 +191,7 @@ void assert_matrix3x3_equal(const VmathMatrix3x3 exp, const VmathMatrix3x3 real,
 }
 
 
-// .
+// Assertion function definition.
 void assert_matrix3x3_equal_tol(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const double tol, const char* caller, int line)
 {
     if (!is_matrix3x3_equal_tol(exp, real, tol)) {
@@ -492,7 +493,7 @@ CTEST(vmath, test_vmath_normalise_mbr) {
 
 CTEST(vmath, test_vmath_normalise_rad) {
     const VmathNumber * values = test_vmath_rad_values;
-    const VmathNumber expects[] = { //FIXME: !!!
+    const VmathNumber expects[] = {
             VMATHNUMBER_C( 6.276203983 ), // -720.4 degrees.
             VMATHNUMBER_C( 0.0 ), // -720 degrees.
             VMATHNUMBER_C( 1.570796325 ), // -630.0 degrees.
@@ -753,7 +754,6 @@ CTEST(vmath, test_vmath_matrix3x3_set_shear_x_direction) {
 
 
 CTEST(vmath, test_vmath_matrix3x3_set_shear_y_direction) {
-    puts("test_vmath_matrix3x3_set_shear_y_direction");
     VmathMatrix3x3 matrix = {
             VMATHNUMBER_C(-1.1 ), VMATHNUMBER_C(-1.2 ), VMATHNUMBER_C(-1.3 ),
             VMATHNUMBER_C(-2.1 ), VMATHNUMBER_C(-2.2 ), VMATHNUMBER_C(-2.3 ),

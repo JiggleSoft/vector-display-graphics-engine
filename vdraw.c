@@ -1,11 +1,11 @@
 //=============================================================================
-// Title:        VEctor Display Graphics Engine (vEdge) Primitive Draw Functions.
+// Title:        VEctor Display Graphics Engine (vEdge) Primitive Draw Funcs.
 // Filename:     vdraw.c
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-02-27 11:06
-// Version:      0.0.1
+// Date:         2021-03-25 21:04
+// Version:      1.0.0-alpha-1
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -23,7 +23,9 @@
 //-----------------------------------------------------------------------------
 
 
+#include <assert.h>
 #include "vdraw.h"
+
 
 
 //-----------------------------------------------------------------------------
@@ -31,26 +33,52 @@
 //-----------------------------------------------------------------------------
 
 // Initialise the drawing context with the SDL renderer.
-void vdraw_init(VdrawContext * context, SDL_Renderer * sdl_renderer)
+bool vdraw_init(VdrawContext * vdraw, SDL_Renderer * sdl_renderer)
 {
-    memset(context, 0, sizeof(struct VdrawContext));
-    context->sdl_renderer = sdl_renderer;
-    context->foreground_colour_min_max_enable = 0;
-    context->foreground_colour.red = 255;
-    context->foreground_colour.green = 255;
-    context->foreground_colour.blue = 255;
-    context->foreground_colour_max.red = 255;
-    context->foreground_colour_max.green = 255;
-    context->foreground_colour_max.blue = 255;
-    context->foreground_intensity_wave_mbr_size = VMATHNUMBER_C( 20.0 );
-    context->foreground_intensity_wave_mbr_speed = VMATHNUMBER_C( 0.2 );
-    context->pen_width = VMATHNUMBER_C( 1.0 );
+    assert (vdraw != NULL);
+    assert (sdl_renderer != NULL);
+    // Clear the context.
+    memset(vdraw, 0, sizeof(struct VdrawContext));
+    // Store the renderer.
+    vdraw->renderer = sdl_renderer;
+    // Get renderer pixel width and height.
+    if (SDL_GetRendererOutputSize(vdraw->renderer,
+                                  &vdraw->width,
+                                  &vdraw->height) != 0) {
+        SDL_Log("vdraw_init: SDL_GetRendererOutputSize failed: %s", SDL_GetError());
+        vdraw_done(vdraw);
+        return false;
+    }
+    // Initialise state with defaults.
+    vdraw->background_colour.red = 0;
+    vdraw->background_colour.green = 0;
+    vdraw->background_colour.blue = 0;
+    vdraw->foreground_colour.red = 255;
+    vdraw->foreground_colour.green = 255;
+    vdraw->foreground_colour.blue = 255;
+    vdraw->foreground_intensity = VMATHNUMBER_C(1.0);
+    vdraw->foreground_colour_min_max_enable = false;
+    vdraw->foreground_colour_min.red = 0;
+    vdraw->foreground_colour_min.green = 0;
+    vdraw->foreground_colour_min.blue = 0;
+    vdraw->foreground_colour_max.red = 255;
+    vdraw->foreground_colour_max.green = 255;
+    vdraw->foreground_colour_max.blue = 255;
+    vdraw->foreground_intensity_wave_enable = false;
+    vdraw->foreground_intensity_wave_size = VMATHNUMBER_C( 20.0 );
+    vdraw->foreground_intensity_wave_mbr_angle = VMATHNUMBER_C( 00.0 );
+    vdraw->foreground_intensity_wave_mbr_speed = VMATHNUMBER_C( 0.2 );
+    vdraw->pen_width = VMATHNUMBER_C( 1.0 );
+    return true;
 }
 
 
 // Clean-up the drawing context.
-void vdraw_done(VdrawContext * context)
-{}
+void vdraw_done(VdrawContext * vdraw)
+{
+    assert (vdraw != NULL);
+    vdraw->renderer = NULL;
+}
 
 
 
@@ -79,7 +107,7 @@ void vdraw_set_foreground_colour(VdrawContext * context,
 
 
 // Set the foreground colour min and max enablement.
-void vdraw_set_foreground_colour_min_max_enable(VdrawContext * context, const _Bool enable)
+void vdraw_set_foreground_colour_min_max_enable(VdrawContext * context, const bool enable)
 {
     context->foreground_colour_min_max_enable = enable;
 }
@@ -123,20 +151,20 @@ void vdraw_set_foreground_colour_max(VdrawContext * context,
 
 
 // Set the foreground intensity wave efeect enablement.
-void vdraw_set_foreground_intensity_wave_enable(VdrawContext * context, const _Bool enable)
+void vdraw_set_foreground_intensity_wave_enable(VdrawContext * context, const bool enable)
 {
     context->foreground_intensity_wave_enable = enable;
 }
 
 
 // Set the foreground intensity wave effect configuration values.
-void vdraw_set_foreground_intensity_wave_size_pos_speed(VdrawContext * context,
-                                                        const VmathNumber size,
-                                                        const VmathNumber pos,
-                                                        const VmathNumber speed)
+void vdraw_set_fg_intensity_wave_values(VdrawContext * context,
+                                        const VmathNumber size,
+                                        const VmathNumber angle,
+                                        const VmathNumber speed)
 {
-    context->foreground_intensity_wave_mbr_size = size;
-    context->foreground_intensity_wave_mbr_pos = pos;
+    context->foreground_intensity_wave_size = size;
+    context->foreground_intensity_wave_mbr_angle = angle;
     context->foreground_intensity_wave_mbr_speed = speed;
 }
 
@@ -150,20 +178,20 @@ void vdraw_set_pen_width(VdrawContext * context, VmathNumber pen_width)
 
 
 // Clear the screen with the current background colour.
-void vdraw_clear_screen(const VdrawContext * context)
+bool vdraw_clear_screen(const VdrawContext * context)
 {
-    SDL_SetRenderDrawColor(context->sdl_renderer,
-                           context->background_colour.red,
-                           context->background_colour.green,
-                           context->background_colour.blue,
-                           SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(context->sdl_renderer);
+//    SDL_SetRenderDrawColor(context->renderer,
+//                           context->background_colour.red,
+//                           context->background_colour.green,
+//                           context->background_colour.blue,
+//                           SDL_ALPHA_OPAQUE);
+    return !SDL_RenderClear(context->renderer);
 }
 
 
 static void cdraw_set_render_draw_colour_by_intensity(const struct VdrawContext * context, VmathNumber intensity) {
     if (intensity == VMATHNUMBER_C(1.0)) {
-        SDL_SetRenderDrawColor(context->sdl_renderer,
+        SDL_SetRenderDrawColor(context->renderer,
                                context->foreground_colour.red,
                                context->foreground_colour.green,
                                context->foreground_colour.blue,
@@ -192,7 +220,7 @@ static void cdraw_set_render_draw_colour_by_intensity(const struct VdrawContext 
             blue = (context->foreground_colour.blue * intensity);
         }
 
-        SDL_SetRenderDrawColor(context->sdl_renderer, red, green, blue, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(context->renderer, red, green, blue, SDL_ALPHA_OPAQUE);
     }
 }
 
@@ -201,13 +229,13 @@ static void cdraw_set_render_draw_colour_by_intensity(const struct VdrawContext 
 void vdraw_point(const VdrawContext * context,
                  const VmathNumber x, const VmathNumber y)
 {
-    SDL_SetRenderDrawColor(context->sdl_renderer,
+    SDL_SetRenderDrawColor(context->renderer,
                            context->foreground_colour.red,
                            context->foreground_colour.green,
                            context->foreground_colour.blue,
                            SDL_ALPHA_OPAQUE);
     //FIXME: context->pen_width, context->pen_width);
-    SDL_RenderDrawPoint(context->sdl_renderer, x, y);
+    SDL_RenderDrawPoint(context->renderer, x, y);
 }
 
 
@@ -228,13 +256,13 @@ void vdraw_line(const VdrawContext * context,
                 const VmathNumber x1, const VmathNumber y1,
                 const VmathNumber x2, const VmathNumber y2)
 {
-    SDL_SetRenderDrawColor(context->sdl_renderer,
+    SDL_SetRenderDrawColor(context->renderer,
                            context->foreground_colour.red,
                            context->foreground_colour.green,
                            context->foreground_colour.blue,
                            SDL_ALPHA_OPAQUE);
     //FIXME: context->pen_width, context->pen_width);
-    SDL_RenderDrawLine(context->sdl_renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLine(context->renderer, x1, y1, x2, y2);
 }
 
 
@@ -249,14 +277,14 @@ void vdraw_line_intensity(const VdrawContext * context,
     cdraw_set_render_draw_colour_by_intensity(context, intensity);
 //FIXME: !!!
     //FIXME: context->pen_width, context->pen_width);
-    SDL_RenderDrawLine(context->sdl_renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLine(context->renderer, x1, y1, x2, y2);
 }
 
 
 // Render all screen drawing since the last call to vdraw_flip().
 void vdraw_flip(const VdrawContext * context)
 {
-    SDL_RenderPresent(context->sdl_renderer);
+    SDL_RenderPresent(context->renderer);
 }
 
 

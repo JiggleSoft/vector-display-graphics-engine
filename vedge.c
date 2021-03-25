@@ -23,8 +23,23 @@
 //-----------------------------------------------------------------------------
 
 
+#include <assert.h>
 #include "vedge.h"
 
+
+
+//-----------------------------------------------------------------------------
+// Temporary Debugging.
+//-----------------------------------------------------------------------------
+
+void debug_display_mode(char * title, SDL_DisplayMode * display_mode) {
+    printf("%s: format=%d, w=%d, h=%d, refresh_rate=%d, driver_data=%p\n", title, display_mode->format, display_mode->w, display_mode->h, display_mode->refresh_rate, display_mode->driverdata);
+}
+
+
+//-----------------------------------------------------------------------------
+// Utilities.
+//-----------------------------------------------------------------------------
 
 #define countof(n) (sizeof(n)/sizeof(n[0]))
 
@@ -42,86 +57,218 @@ const char * vedge_error_messages[] = {
 };
 
 
+//-----------------------------------------------------------------------------
+// Configuration Functions.
+//-----------------------------------------------------------------------------
+
+// The default template initialisation config..
+const VedgeConfig vedge_config_default = {
+        0
+};
+
+
+// Initialise an init config from defaults (template_init_config == NULL) or
+// by a supplied template_init_config.
+void vedge_config_template(VedgeConfig * vedge_config,
+                           const VedgeConfig * template_vedge_config)
+{
+    assert (vedge_config != NULL);
+    memcpy(vedge_config,
+           (template_vedge_config == NULL) ? &vedge_config_default : template_vedge_config,
+           sizeof(VedgeConfig));
+}
+
+
+// .
+static void vedge_init_config_sdl(VedgeConfig * vedge_config,
+                           SDL_Window * sdl_window,
+                           SDL_Renderer * sdl_renderer)
+{
+    assert (vedge_config != NULL);
+    assert (sdl_window != NULL);
+    assert (sdl_renderer != NULL);
+    vedge_config_template(vedge_config, NULL);
+    vedge_config->sdl_window = sdl_window = sdl_window;
+    vedge_config->sdl_renderer = sdl_renderer;
+}
+
+
+// .
+void vedge_config_sdl2boot(VedgeConfig * vedge_config,
+                           const Sdl2BootContext * sdl2boot)
+{
+    assert (vedge_config != NULL);
+    assert (sdl2boot != NULL);
+    vedge_init_config_sdl(vedge_config, sdl2boot->state.window, sdl2boot->state.renderer);
+}
+
 
 //-----------------------------------------------------------------------------
 // Lifecycle Management Functions.
 //-----------------------------------------------------------------------------
 
-// .
-int vedge_init(VedgeContext * context, SDL_Renderer * sdl_renderer)
+// Initialise the engine and the initial sub-systems.
+bool vedge_init(VedgeContext * vedge, const VedgeConfig * vedge_config)
 {
-    memset(context, 0, sizeof(VedgeContext));
-    context->sdl_renderer = sdl_renderer;
-    context->vdraw_context = &context->private_vdraw_context;
-    vedge_clear_error_code(context);
-    vdraw_init(context->vdraw_context, sdl_renderer);
-
-
-//    vedge_frame_start(context);
-//    vedge_frame_finish(context);
-//    vdraw_set_foreground_colour(vdraw, 255, 255, 255 );
-//    vdraw_set_background_colour(vdraw, 0, 0, 0);
-//    vdraw_set_foreground_colour_min_max_enable(vdraw, 0);
-//    vdraw_clear_screen(vdraw);
-//    vdraw_flip(vdraw);
-
+    assert (vedge != NULL);
+    assert (vedge_config != NULL);
+    // Initialise the context.
+    memset(vedge, 0, sizeof(VedgeContext));
+    // Copy the configuration.
+    memcpy(&vedge->config, vedge_config, sizeof(VedgeConfig));
+    // Initialise vmath.
+    vmath_init();
+    vedge->state.vmath_initialised = 1;
+    // Set up initial open config.
+    vdraw_init(&vedge->state.private_vdraw_context, vedge->config.sdl_renderer);//FIXME: bring in line with other code.
+    vedge->state.vdraw_context = &vedge->state.private_vdraw_context;
+//FIXME: move to vdraw...
+    // Get width and heigt
+//    SDL_GetRendererOutputSize(vedge->state.vdraw_context->sdl_renderer, &vedge->state.width, &vedge->state.height);
+    //FIXME: above.
+    // vEdge is initialised successfully.
+    vedge->state.initialised = true;
+    return true;
 }
 
 
 // .
 void vedge_done(VedgeContext * vedge)
 {
-    vdraw_done(vedge->vdraw_context);
-}
-
-
-
-//-----------------------------------------------------------------------------
-// Error Handling Functions.
-//-----------------------------------------------------------------------------
-
-// Clear the last error code.
-void vedge_clear_error_code(VedgeContext *vedge)
-{
-    vedge->vedge_error_code = VEDGE_NO_ERROR;
-    vedge->vedge_error_message = vedge_error_messages[VEDGE_NO_ERROR];
-}
-
-
-// Get the last error code.
-int vedge_get_error_code(const VedgeContext *vedge)
-{
-    return vedge->vedge_error_code;
-}
-
-
-// Get the last error message.
-const char * vedge_get_error_message(const VedgeContext *vedge)
-{
-    return vedge->vedge_error_message;
-}
-
-
-void vedge_set_error_code(VedgeContext * vedge, const int error_code)
-{
-    vedge->vedge_error_code = error_code;
-    if (error_code >= 0 || error_code < countof(vedge_error_messages)) {
-        vedge->vedge_error_message = vedge_error_messages[error_code];
-    } else {
-        sprintf(vedge->private_vdraw_error_message, "Unknown error %d", error_code);
-        vedge->vedge_error_message = vedge->private_vdraw_error_message;
+    assert (vedge != NULL);
+    // Close the vmath.
+    if (vedge->state.vmath_initialised) {
+        vmath_done();
+        vedge->state.vmath_initialised = 0;
     }
+//    // Shutdown SDL and its sub-systems.
+//    if (vedge->init_state.init_subsystems) {
+//        SDL_Quit();
+//        vedge->init_state.init_subsystems = 0;
+//    }
+//    // vEdge is no longer initialised.
+//    vedge->init_state.vedge_initialised = 0;
 }
 
 
-void vedge_set_error(VedgeContext * vedge, const int error_code, const char * error_message)
+//-----------------------------------------------------------------------------
+// Vector Display Graphics Engine Main Loop and Event Processing.
+//-----------------------------------------------------------------------------
+
+#define VEDGE_VDRAW(vedge) vedge->state.vdraw_context
+
+// .
+int vedge_run(VedgeContext * vedge)
+{int x = 0;
+    SDL_Event event;
+    bool quit = false;
+    while (!quit)
+    {
+        while (SDL_PollEvent(&event) != 0)
+        {
+            //call general event handler vedge_event(&event);
+            //call specific event handlers
+            //User requests quit
+            if (event.type == SDL_QUIT) {
+                quit = 1;
+            }
+        }
+
+        vdraw_clear_screen(VEDGE_VDRAW(vedge));
+
+        for (int a = 0; a < 25; a++) {
+            vdraw_set_foreground_colour(VEDGE_VDRAW(vedge), 255, 255, 255);
+            vdraw_line(VEDGE_VDRAW(vedge), x % 2048, 200, 300, 800);
+
+            vdraw_set_foreground_colour(VEDGE_VDRAW(vedge), 255, 0, 0);
+            vdraw_line(VEDGE_VDRAW(vedge), x % 20458, 200, x % 1024, 800);
+
+            vdraw_set_foreground_colour(VEDGE_VDRAW(vedge), 0, 255, 0);
+            vdraw_line(VEDGE_VDRAW(vedge), x / 2 % 4096, 200, 300, 800);
+
+            x++;
+        }
+if (x > 2048) x = 0;
+//        vdraw_char(VEDGE_VDRAW(vedge), 'J', 300, 800);
+//        vdraw_text(VEDGE_VDRAW(vedge), 300, 800, 10, 200);
+
+        vdraw_flip(VEDGE_VDRAW(vedge));
+
+        //call render loop function
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------
+// Engine Management Functions.
+//-----------------------------------------------------------------------------
+
+// Open the engine with current configuration..
+int vedge_open(VedgeContext * context)
 {
-    vedge->vedge_error_code = error_code;
-    strncpy(vedge->private_vdraw_error_message, error_message, VDRAW_ERROR_MESSAGE_LENGTH_MAX);
-    vedge->private_vdraw_error_message[VDRAW_ERROR_MESSAGE_LENGTH_MAX-1] = '\0';
-    vedge->vedge_error_message = vedge->private_vdraw_error_message;
+    assert (context != NULL);
+    //TODO check flag for initialised.
+    // Initialise SDL's optional sub-systems.
+    // TODO: !!!!!!!!!!!!!!!!!
+    // Open the SDL window.
+    SDL_DisplayMode current_display_mode;
+    SDL_DisplayMode request_display_mode = { .format = 0, .w = 0, .h = 0, .refresh_rate = 0, .driverdata = NULL };
+    SDL_DisplayMode nearest_display_mode;
+//    SDL_GetCurrentDisplayMode(context->init_config.display_index, &current_display_mode);
+//    SDL_GetClosestDisplayMode(context->init_config.display_index, &request_display_mode, &nearest_display_mode);
+//    debug_display_mode("current_display_mode", &current_display_mode);
+//    debug_display_mode("request_display_mode", &request_display_mode);
+//    debug_display_mode("nearest_display_mode", &nearest_display_mode);
+//    context->init_state.sdl_window = SDL_CreateWindow(
+//            context->init_config.windows_title,
+//            context->init_config.window_x_pos,
+//            context->init_config.window_y_pos,
+//            context->init_config.window_width == 0 ? current_display_mode.w : context->init_config.window_width,
+//            context->init_config.window_height == 0 ? current_display_mode.h : context->init_config.window_height,
+//            context->init_config.window_flags);
+    // Open the SDL renderer.
+//    context->init_state.sdl_renderer = SDL_CreateRenderer(context->init_state.sdl_window,
+//                                                          context->init_config.display_index,
+//                                                          SDL_RENDERER_SOFTWARE);
+//    // Initialise vdraw.
+//    vdraw_init(&context->init_state.private_vdraw_context, context->init_state.sdl_renderer);
+//    context->init_state.vdraw_context = &context->init_state.private_vdraw_context;
+    return 0;
 }
 
+
+
+// Close the engine.
+int vedge_close(VedgeContext * context)
+{
+    assert (context != NULL);
+    // Close the vdraw context.
+//    if (context->init_state.vdraw_context != NULL) {
+//        vdraw_done(context->init_state.vdraw_context);
+//        context->init_state.vdraw_context = NULL;
+//    }
+//    // Close the SDL renderer.
+//    if (context->init_state.sdl_renderer) {
+//        SDL_DestroyRenderer(context->init_state.sdl_renderer);
+//        context->init_state.sdl_renderer = NULL;
+//    }
+//    // Close the SDL window.
+//    if (context->init_state.sdl_window) {
+//        SDL_DestroyWindow(context->init_state.sdl_window);
+//        context->init_state.sdl_window = NULL;
+//    }
+    // Close the SDL optional sub-systems.
+    // TODO: !!!
+    return 0;
+}
 
 
 //-----------------------------------------------------------------------------
@@ -131,19 +278,32 @@ void vedge_set_error(VedgeContext * vedge, const int error_code, const char * er
 
 void vedge_frame_start(VedgeContext * context)
 {
-    vdraw_clear_screen(context->vdraw_context);
+    assert (context != NULL);
+//    vdraw_clear_screen(context->init_state.vdraw_context);
 }
 
 
 void vedge_frame_finish(VedgeContext * context)
 {
-    vdraw_flip(context->vdraw_context);
+    assert (context != NULL);
+ //   vdraw_flip(context->init_state.vdraw_context);
 }
 
 
-void vedge_frame_add_game_object(VedgeContext * context, const VedgeGameObject game_object)
+void vedge_frame_add_game_object(VedgeContext * context, const VedgeGameObject * game_object)
 {
+    assert (context != NULL);
+    assert (game_object != NULL);
+    if (game_object->enable) {
+        for (int i = 0;  i < game_object->items->length;  i++) {
+            switch (game_object->items->game_items[i].type) {
+                case POINT:
+//FIXME:                     VedgePoint * point = game_object->items->game_items[i].game_item.point;
+break;
 
+            }
+        }
+    }
 }
 
 

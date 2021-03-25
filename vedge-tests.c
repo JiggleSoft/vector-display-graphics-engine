@@ -1,11 +1,11 @@
 //=============================================================================
-// Title:        VEctor Display Graphics Engine (vEdge) Font.
-// Filename:     vfont.h
+// Title:        VEctor Display Graphics Engine (vEdge) Unit Tests.
+// Filename:     vedge-tests.c
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-25 17:16
-// Version:      1.0.0-beta-1
+// Date:         2021-03-17 20:12
+// Version:      0.0.1
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -22,67 +22,69 @@
 // limitations under the License.
 //-----------------------------------------------------------------------------
 
-#ifndef __VFONT__H__
-#define __VFONT__H__
-
-
+// API under test.
 #include "vedge.h"
 
 
-//-----------------------------------------------------------------------------
-// Font Data Types.
-//-----------------------------------------------------------------------------
+// CTest configuration.
+#define CTEST_MAIN
+#define CTEST_SEGFAULT
 
-// Fixed size font with origin [0.0,0.0] at approx. half the width and height.
-typedef struct Vfont {
-    // The lowest ASCII character value supported.
-    const int char_min;
-    // The maximum ASCII character value supported.
-    const int char_max;
-    // The width of the characters.
-    const VmathNumber char_width;
-    // The height of the characters.
-    const VmathNumber char_height;
-    // The graphical glyph to be returned for characters that are undefined.
-    const VedgeGlyph * undefined_glyph;
-    // The graphical lines that make up this font.
-    const VedgeGlyph * char_glyphs[];
-} Vfont;
+// CTest include / implementation.
+#include "ctest.h"
 
 
 
 //-----------------------------------------------------------------------------
-// Fonts Data.
+// .
 //-----------------------------------------------------------------------------
-
-// 7-segment font (disabled by default; enable if required).
-#ifdef VFONT_7SEG_ENABLE
-extern Vfont * vfont_7seg;
-#endif
-
-
-// 16-segment font (disabled by default; enable if required).
-#ifdef VFONT_16SEG_ENABLE
-extern Vfont * vfont_16seg;
-#endif
-
-
-// Arcade font (enabled by default; disable if not required).
-#ifndef VFONT_ARCADE_DISABLE
-extern Vfont * vfont_arcade;
-#endif
 
 
 
 //-----------------------------------------------------------------------------
-// Font Functions.
+// Test Fixture Lifecycle.
 //-----------------------------------------------------------------------------
 
-// Get a font character as vEDGE lines.
-extern const VedgeGlyph * vfont_get_char(const Vfont * font, const char ch);
+CTEST_DATA(vedge) {
+};
+
+
+CTEST_SETUP(vedge)
+{
+//FIXME:    vedge_init();
+}
+
+
+CTEST_TEARDOWN(vedge)
+{
+//FIXME:    vedge_done();
+}
 
 
 
-#endif /* __VFONT__H__ */
+//-----------------------------------------------------------------------------
+// Constant Test Data.
+//-----------------------------------------------------------------------------
+
+
+
+//-----------------------------------------------------------------------------
+// Test Stuff.
+//-----------------------------------------------------------------------------
+
+CTEST(vedge, test_vedge_stuff) {
+    ASSERT_FAIL();
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Main Application Entry Point./.
+//-----------------------------------------------------------------------------
+
+int main(int argc, const char *argv[])
+{
+    return ctest_main(argc, argv);
+}
 
 

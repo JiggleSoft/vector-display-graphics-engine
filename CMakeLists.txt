@@ -24,12 +24,19 @@ include_directories(${SDL2_INCLUDE_DIRS})
 #FIXME: CTEST: target_link_libraries(test-vmath ${SDL2_LIBRARIES} m)
 
 
-set(SOURCE_FILES main.c main.h vmath.c vmath.h vdraw.c vdraw.h vedge.c vedge.h vfont.c vfont.h vfont-segs.h)
+set(SOURCE_FILES main.c main.h sdl2boot.c sdl2boot.h vmath.c vmath.h vdraw.c vdraw.h vedge.c vedge.h vfont.c vfont.h vfont-segs.h)
 
 add_executable(test-app ${SOURCE_FILES})
 target_link_libraries(test-app ${SDL2_LIBRARIES} m)
+
 
 add_executable(vmath-tests vmath-tests.c vmath.c vmath.h)
 target_link_libraries(vmath-tests m)
 
 add_test(vmath-tests vmath-tests)
+
+
+add_executable(vedge-tests vedge-tests.c vmath.c vmath.h vdraw.c vdraw.h vedge.c vedge.h vfont.c vfont.h vfont-segs.h)
+target_link_libraries(vedge-tests ${SDL2_LIBRARIES} m)
+
+add_test(vedge-tests vedge-tests)

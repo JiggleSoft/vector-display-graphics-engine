@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-01-24 19:27
-// Version:      0.0.1
+// Date:         2021-03-25 21:38
+// Version:      1.0.0-alpha-1
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -24,25 +24,6 @@
 
 #ifndef __MAIN__H__
 #define __MAIN__H__
-
-
-#include "SDL.h"
-
-#include "vedge.h"
-#include "vfont.h"
-#include "vmath.h"
-
-#define DEBUG 1
-
-
-#define GAME_VERSION "0.0.0.0-beta-0"
-
-
-#define GAME_WINDOW_TITLE "Test Application version " GAME_VERSION " created with SDL v2."
-#define GAME_WINDOW_WIDTH 1024
-#define GAME_WINDOW_HEIGHT 768
-#define GAME_WINDOW_FLAGS 0
-//SDL_WINDOW_FULLSCREEN
 
 
 

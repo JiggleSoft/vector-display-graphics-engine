@@ -159,7 +159,17 @@ void vedge_done(VedgeContext * vedge)
 
 // .
 int vedge_run(VedgeContext * vedge)
-{int x = 0;
+{
+    int x1 = 44;
+    int y1 = 393;
+    int x2 = 123;
+    int y2 = 13;
+    int x1d = 5;
+    int y1d = 6;
+    int x2d = -4;
+    int y2d = 8;
+
+    int x = 0;
     SDL_Event event;
     bool quit = false;
     while (!quit)
@@ -174,25 +184,81 @@ int vedge_run(VedgeContext * vedge)
             }
         }
 
-        vdraw_clear_screen(VEDGE_VDRAW(vedge));
 
-        for (int a = 0; a < 25; a++) {
-            vdraw_set_foreground_colour(VEDGE_VDRAW(vedge), 255, 255, 255);
-            vdraw_line(VEDGE_VDRAW(vedge), x % 2048, 200, 300, 800);
+printf("%d %d %d   %d %d %d   %f   %f %f %f\n",
+       VEDGE_VDRAW(vedge)->foreground_colour.red,
+       VEDGE_VDRAW(vedge)->foreground_colour.green,
+       VEDGE_VDRAW(vedge)->foreground_colour.blue,
 
-            vdraw_set_foreground_colour(VEDGE_VDRAW(vedge), 255, 0, 0);
-            vdraw_line(VEDGE_VDRAW(vedge), x % 20458, 200, x % 1024, 800);
+       VEDGE_VDRAW(vedge)->foreground_colour_requested.red,
+       VEDGE_VDRAW(vedge)->foreground_colour_requested.green,
+       VEDGE_VDRAW(vedge)->foreground_colour_requested.blue,
 
-            vdraw_set_foreground_colour(VEDGE_VDRAW(vedge), 0, 255, 0);
-            vdraw_line(VEDGE_VDRAW(vedge), x / 2 % 4096, 200, 300, 800);
+       VEDGE_VDRAW(vedge)->foreground_colour_intensity,
 
+       VEDGE_VDRAW(vedge)->foreground_intensity_wave_size,
+       VEDGE_VDRAW(vedge)->foreground_intensity_wave_mbr_angle,
+       VEDGE_VDRAW(vedge)->foreground_intensity_wave_mbr_speed
+
+
+);
+
+vedge->state.vdraw_context->foreground_intensity_wave_mbr_speed = 128;
+       /// vdraw_clear_screen(VEDGE_VDRAW(vedge));
+vdraw_set_pen_width(VEDGE_VDRAW(vedge), 2.0);
+
+        vdraw_set_fg_colour(VEDGE_VDRAW(vedge), 255, 255, 255);
+
+
+//        vdraw_set_fg_colour_requested(VEDGE_VDRAW(vedge), 255, 0, 255);
+//        vdraw_set_fg_colour_intensity(VEDGE_VDRAW(vedge), x/64.0);
+//        vdraw_upd_fg_colour_from_requested_and_intensity(VEDGE_VDRAW(vedge));
+
+vdraw_update_fg_colour_intensity_from_wave(VEDGE_VDRAW(vedge));
+VEDGE_VDRAW(vedge)->foreground_intensity_wave_mbr_angle += VEDGE_VDRAW(vedge)->foreground_intensity_wave_mbr_speed;
+
+vdraw_upd_fg_colour_from_requested_and_intensity(VEDGE_VDRAW(vedge));
+
+        vdraw_line(VEDGE_VDRAW(vedge), x1, y1, x2 , y2);
+        x1 = x1 + x1d;
+        y1 = y1 + y1d;
+        x2 = x2 + x2d;
+        y2 = y2 + y2d;
+        if (x1 < 5 || x1 > (VEDGE_VDRAW(vedge)->width-5)) x1d = -x1d;
+        if (y1 < 5 || y1 > (VEDGE_VDRAW(vedge)->height-5)) y1d = -y1d;
+        if (x2 < 5 || x2 > (VEDGE_VDRAW(vedge)->width-5)) x2d = -x2d;
+        if (y2 < 5 || y2 > (VEDGE_VDRAW(vedge)->height-5)) y2d = -y2d;
+
+
+
+//        for (int a = 0; a < 25; a++) {
+//            vdraw_set_fg_colour(VEDGE_VDRAW(vedge), 255, 255, 255);
+//            vdraw_line(VEDGE_VDRAW(vedge), x % 2048, 200, 300, 800);
+//
+//            vdraw_set_fg_colour(VEDGE_VDRAW(vedge), 255, 0, 0);
+//            vdraw_line(VEDGE_VDRAW(vedge), x % 20458, 200, x % 1024, 800);
+//
+//            vdraw_set_fg_colour(VEDGE_VDRAW(vedge), 0, 255, 0);
+//            vdraw_line(VEDGE_VDRAW(vedge), x / 2 % 4096, 200, 300, 800);
+//
             x++;
-        }
-if (x > 2048) x = 0;
+//        }
+SDL_Delay(10);
+if (x > 2048) {
+    x = 0;
+    vdraw_clear_screen(VEDGE_VDRAW(vedge));
+}
 //        vdraw_char(VEDGE_VDRAW(vedge), 'J', 300, 800);
 //        vdraw_text(VEDGE_VDRAW(vedge), 300, 800, 10, 200);
 
-        vdraw_flip(VEDGE_VDRAW(vedge));
+//for (int z = 0;  z < 1024;  z+= 16) {
+//    vdraw_set_pen_width(VEDGE_VDRAW(vedge), z / 64);
+//    vdraw_point(VEDGE_VDRAW(vedge), z+ ((x %1024) * 10), z);
+//}
+        vdraw_set_pen_width(VEDGE_VDRAW(vedge), 1.0);
+
+
+        vdraw_flip_screen(VEDGE_VDRAW(vedge));
 
         //call render loop function
     }

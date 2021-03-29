@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-24 21:55
-// Version:      1.0.0-beta-1
+// Date:         2021-03-29 17:47
+// Version:      1.0.0-beta-3
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -31,177 +31,8 @@
 #define CTEST_MAIN
 #define CTEST_SEGFAULT
 
-// CTest include / implementation.
-#include "ctest.h"
-
-
-
-//-----------------------------------------------------------------------------
-// Custom Vmath Test Utilities.
-//-----------------------------------------------------------------------------
-
-// Count of elements in a single dimension array.
-#define countof(a) (sizeof(a) / sizeof(a[0]))
-
-
-// Test two vmath numbers for equality.
-int is_vmathnumber_equal(const VmathNumber number1, const VmathNumber number2)
-{
-    return (number1 == number2);
-}
-
-
-// Test two 3x1 matrices for equality.
-int is_matrix3x1_equal(const VmathMatrix3x1 matrix1, const VmathMatrix3x1 matrix2)
-{
-    for (int x = 0;  x < 3;  x++) {
-        if (matrix1[x] != matrix2[x]) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-
-// Test two 3x1 matrices for equality with given tolerance.
-int is_matrix3x1_equal_tol(const VmathMatrix3x1 matrix1, const VmathMatrix3x1 matrix2, const double tol)
-{
-    for (int x = 0;  x < 3;  x++) {
-        double diff = matrix1[x] - matrix2[x];
-        double absdiff = diff;
-        /* avoid using fabs and linking with a math lib */
-        if(diff < 0) {
-          absdiff *= -1;
-        }
-        if (absdiff > tol) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-
-// Test two 3x3 matrices for equality.
-int is_matrix3x3_equal(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2)
-{
-    for (int y = 0;  y < 3;  y++) {
-        for (int x = 0;  x < 3;  x++) {
-            if (matrix1[y][x] != matrix2[y][x]) {
-                return 0;
-            }
-        }
-    }
-    return 1;
-}
-
-
-// Test two 3x3 matrices for equality with given tolerance.
-int is_matrix3x3_equal_tol(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, const double tol)
-{
-    for (int y = 0;  y < 3;  y++) {
-        for (int x = 0;  x < 3;  x++) {
-            double diff = matrix1[y][x] - matrix2[y][x];
-            double absdiff = diff;
-            /* avoid using fabs and linking with a math lib */
-            if(diff < 0) {
-                absdiff *= -1;
-            }
-            if (absdiff > tol) {
-                return 0;
-            }
-        }
-    }
-    return 1;
-}
-
-
-
-//-----------------------------------------------------------------------------
-// Custom Vmath Test Assertions Macros.
-//-----------------------------------------------------------------------------
-
-// Assertion function declaration and its client used macro.
-void assert_vmathnumber_equal(const VmathNumber exp, const VmathNumber real, const char* caller, int line);
-#define ASSERT_VMATHNUMBER_EQUAL(exp, real) assert_vmathnumber_equal(exp, real, __FILE__, __LINE__)
-
-
-// Assertion function declaration and its client used macro.
-void assert_matrix3x1_equal(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, const char* caller, int line);
-#define ASSERT_MATRIX3X1_EQUAL(exp, real) assert_matrix3x1_equal(exp, real, __FILE__, __LINE__)
-
-
-// Assertion function declaration and its client used macro.
-void assert_matrix3x1_equal_tol(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, const double tol, const char* caller, int line);
-#define ASSERT_MATRIX3X1_EQUAL_TOL(exp, real, tol) assert_matrix3x1_equal_tol(exp, real, tol, __FILE__, __LINE__)
-
-
-// Assertion function declaration and its client used macro.
-void assert_matrix3x3_equal(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const char* caller, int line);
-#define ASSERT_MATRIX3X3_EQUAL(exp, real) assert_matrix3x3_equal(exp, real, __FILE__, __LINE__)
-
-
-// Assertion function declaration and its client used macro.
-void assert_matrix3x3_equal_tol(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const double tol, const char* caller, int line);
-#define ASSERT_MATRIX3X3_EQUAL_TOL(exp, real, tol) assert_matrix3x3_equal_tol(exp, real, tol, __FILE__, __LINE__)
-
-
-
-//-----------------------------------------------------------------------------
-// Custom Vmath Test Assertions Functions.
-//-----------------------------------------------------------------------------
-
-// Assertion function definition.
-void assert_vmathnumber_equal(const VmathNumber exp, const VmathNumber real, const char* caller, int line)
-{
-    if (!is_vmathnumber_equal(exp, real)) {
-        CTEST_ERR("%s:%d expected vmath number %f got %f", caller, line, exp, real);
-    }
-}
-
-
-// Assertion function definition.
-void assert_matrix3x1_equal(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, const char* caller, int line)
-{
-    if (!is_matrix3x1_equal(exp, real)) {
-        CTEST_ERR("%s:%d expected matrix 3x1 [%f,%f,%f] got [%f,%f,%f]", caller, line,
-            exp[0], exp[1], exp[2], real[0], real[1], real[2]);
-    }
-}
-
-
-// Assertion function definition.
-void assert_matrix3x1_equal_tol(const VmathMatrix3x1 exp, const VmathMatrix3x1 real, double tol, const char* caller, int line)
-{
-    if (!is_matrix3x1_equal_tol(exp, real, tol)) {
-        CTEST_ERR("%s:%d expected matrix 3x1 [%f,%f,%f] got [%f,%f,%f] tolerance %f", caller, line,
-            exp[0], exp[1], exp[2], real[0], real[1], real[2], tol);
-    }
-}
-
-
-// Assertion function definition.
-void assert_matrix3x3_equal(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const char* caller, int line)
-{
-    if (!is_matrix3x3_equal(exp, real)) {
-        CTEST_ERR("%s:%d expected matrix 3x3 [[%f,%f,%f],[%f,%f,%f],[%f,%f,%f]] got [[%f,%f,%f],[%f,%f,%f],[%f,%f,%f]]",
-            caller, line,
-            exp[0][0], exp[0][1], exp[0][2], exp[1][0], exp[1][1], exp[1][2], exp[2][0], exp[2][1], exp[2][2],
-            real[0][0], real[0][1], real[0][2], real[1][0], real[1][1], real[1][2], real[2][0], real[2][1], real[2][2]);
-    }
-}
-
-
-// Assertion function definition.
-void assert_matrix3x3_equal_tol(const VmathMatrix3x3 exp, const VmathMatrix3x3 real, const double tol, const char* caller, int line)
-{
-    if (!is_matrix3x3_equal_tol(exp, real, tol)) {
-        CTEST_ERR("%s:%d expected matrix 3x3 [[%f,%f,%f],[%f,%f,%f],[%f,%f,%f]] got [[%f,%f,%f],[%f,%f,%f],[%f,%f,%f]] tolerance %f",
-                  caller, line,
-                  exp[0][0], exp[0][1], exp[0][2], exp[1][0], exp[1][1], exp[1][2], exp[2][0], exp[2][1], exp[2][2],
-                  real[0][0], real[0][1], real[0][2], real[1][0], real[1][1], real[1][2], real[2][0], real[2][1], real[2][2],
-                  tol);
-    }
-}
+// CTest vMath include (implementation) file.
+#include "vmath-ctest.h"
 
 
 
@@ -209,7 +40,8 @@ void assert_matrix3x3_equal_tol(const VmathMatrix3x3 exp, const VmathMatrix3x3 r
 // Test Fixture Lifecycle.
 //-----------------------------------------------------------------------------
 
-CTEST_DATA(vmath) {
+CTEST_DATA(vmath)
+{
 };
 
 
@@ -315,9 +147,119 @@ static const VmathNumber test_vmath_deg_values[] = {
 
 
 CTEST(vmath, test_vmath_mbr_rad_deg_values) {
-    ASSERT_EQUAL(countof(test_vmath_mbr_values), countof(test_vmath_rad_values));
-    ASSERT_EQUAL(countof(test_vmath_rad_values), countof(test_vmath_deg_values));
-    ASSERT_EQUAL(countof(test_vmath_deg_values), countof(test_vmath_mbr_values));
+    ASSERT_EQUAL(_countof(test_vmath_mbr_values), _countof(test_vmath_rad_values));
+    ASSERT_EQUAL(_countof(test_vmath_rad_values), _countof(test_vmath_deg_values));
+    ASSERT_EQUAL(_countof(test_vmath_deg_values), _countof(test_vmath_mbr_values));
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Test Clipping Functions.
+//-----------------------------------------------------------------------------
+
+CTEST(vmath, test_vmath_clip_floor) {
+    const VmathNumber values[] = {
+            VMATHNUMBER_C(-256.0),
+            VMATHNUMBER_C(-64.001),
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-63.999),
+            VMATHNUMBER_C(-0.001),
+            VMATHNUMBER_C(-0.0),
+            VMATHNUMBER_C(0.0),
+            VMATHNUMBER_C(0.001),
+            VMATHNUMBER_C(63.999),
+            VMATHNUMBER_C(64.0),
+            VMATHNUMBER_C(64.001),
+            VMATHNUMBER_C(256.0)};
+    const VmathNumber expects[] = {
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-63.999),
+            VMATHNUMBER_C(-0.001),
+            VMATHNUMBER_C(-0.0),
+            VMATHNUMBER_C(0.0),
+            VMATHNUMBER_C(0.001),
+            VMATHNUMBER_C(63.999),
+            VMATHNUMBER_C(64.0),
+            VMATHNUMBER_C(64.001),
+            VMATHNUMBER_C(256.0)};
+    for (int i = 0; i < _countof(values); i++) {
+        const VmathNumber output = vmath_clip_floor(values[i], -64.0);
+        const VmathNumber expect = expects[i];
+        ASSERT_DBL_EQUAL(expect, output);
+    }
+}
+
+
+CTEST(vmath, test_vmath_clip_ceil) {
+    const VmathNumber values[] = {
+            VMATHNUMBER_C(-256.0),
+            VMATHNUMBER_C(-64.001),
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-63.999),
+            VMATHNUMBER_C(-0.001),
+            VMATHNUMBER_C(-0.0),
+            VMATHNUMBER_C(0.0),
+            VMATHNUMBER_C(0.001),
+            VMATHNUMBER_C(63.999),
+            VMATHNUMBER_C(64.0),
+            VMATHNUMBER_C(64.001),
+            VMATHNUMBER_C(256.0)};
+    const VmathNumber expects[] = {
+            VMATHNUMBER_C(-256.0),
+            VMATHNUMBER_C(-64.001),
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-63.999),
+            VMATHNUMBER_C(-0.001),
+            VMATHNUMBER_C(-0.0),
+            VMATHNUMBER_C(0.0),
+            VMATHNUMBER_C(0.001),
+            VMATHNUMBER_C(63.999),
+            VMATHNUMBER_C(64.0),
+            VMATHNUMBER_C(64.0),
+            VMATHNUMBER_C(64.0)};
+    for (int i = 0; i < _countof(values); i++) {
+        const VmathNumber output = vmath_clip_ceil(values[i], 64.0);
+        const VmathNumber expect = expects[i];
+        ASSERT_DBL_EQUAL(expect, output);
+    }
+}
+
+
+CTEST(vmath, test_vmath_clip_floor_ceil) {
+    const VmathNumber values[] = {
+            VMATHNUMBER_C( -256.0 ),
+            VMATHNUMBER_C( -64.001 ),
+            VMATHNUMBER_C( -64.0 ),
+            VMATHNUMBER_C( -63.999 ),
+            VMATHNUMBER_C( -0.001 ),
+            VMATHNUMBER_C( -0.0 ),
+            VMATHNUMBER_C( 0.0 ),
+            VMATHNUMBER_C( 0.001 ),
+            VMATHNUMBER_C( 63.999 ),
+            VMATHNUMBER_C(  64.0),
+            VMATHNUMBER_C(  64.001),
+            VMATHNUMBER_C( 256.0 )};
+    const VmathNumber expects[] = {
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-64.0),
+            VMATHNUMBER_C(-63.999),
+            VMATHNUMBER_C(-0.001),
+            VMATHNUMBER_C(-0.0),
+            VMATHNUMBER_C(0.0),
+            VMATHNUMBER_C(0.001),
+            VMATHNUMBER_C(63.999),
+            VMATHNUMBER_C(64.0),
+            VMATHNUMBER_C(64.0),
+            VMATHNUMBER_C(64.0)};
+    for (int i = 0;  i < _countof(values);  i++) {
+        const VmathNumber output = vmath_clip_floor_ceil(values[i], -64.0, 64.0);
+        const VmathNumber expect = expects[i];
+        ASSERT_DBL_EQUAL(expect, output);
+    }
 }
 
 
@@ -326,8 +268,7 @@ CTEST(vmath, test_vmath_mbr_rad_deg_values) {
 // Test Trigonometry Functions.
 //-----------------------------------------------------------------------------
 
-CTEST(vmath, test_vmath_mbr_sin) {
-vmath_init(); //FIXME: !!!
+CTEST2(vmath, test_vmath_mbr_sin) {
     const VmathNumber values[] = {
             VMATHNUMBER_C( 0.0 ), // 0 degrees
             VMATHNUMBER_C( 128.0 ), // 45 degrees
@@ -344,7 +285,7 @@ vmath_init(); //FIXME: !!!
             VMATHNUMBER_C( -1.0 ),
             VMATHNUMBER_C( 0.0 ),
             VMATHNUMBER_C( 0.7071067812 )};
-    for (int i = 0;  i < countof(values);  i++) {
+    for (int i = 0;  i < _countof(values);  i++) {
         const VmathNumber output = vmath_mbr_sin(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR(expect, output);
@@ -352,8 +293,7 @@ vmath_init(); //FIXME: !!!
 }
 
 
-CTEST(vmath, test_vmath_mbr_cos) {
-vmath_init(); //FIXME: !!!
+CTEST2(vmath, test_vmath_mbr_cos) {
     const VmathNumber values[] = {
             VMATHNUMBER_C( 0.0 ), // 0 degrees
             VMATHNUMBER_C( 128.0 ), // 45 degrees
@@ -370,7 +310,7 @@ vmath_init(); //FIXME: !!!
             VMATHNUMBER_C( 0.0 ),
             VMATHNUMBER_C( 1.0 ),
             VMATHNUMBER_C( 0.7071067812 )};
-    for (int i = 0;  i < countof(values);  i++) {
+    for (int i = 0;  i < _countof(values);  i++) {
         const VmathNumber output = vmath_mbr_cos(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR(expect, output);
@@ -386,7 +326,7 @@ vmath_init(); //FIXME: !!!
 CTEST(vmath, test_vmath_rad_to_mbr) {
     const VmathNumber * values = test_vmath_rad_values;
     const VmathNumber * expects = test_vmath_mbr_values;
-    for (int i = 0;  i < countof(test_vmath_rad_values);  i++) {
+    for (int i = 0;  i < _countof(test_vmath_rad_values);  i++) {
         const VmathNumber output = vmath_rad_to_mbr(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -397,8 +337,8 @@ CTEST(vmath, test_vmath_rad_to_mbr) {
 CTEST(vmath, test_vmath_deg_to_mbr) {
     const VmathNumber * values = test_vmath_deg_values;
     const VmathNumber * expects = test_vmath_mbr_values;
-    ASSERT_EQUAL(countof(values), countof(expects));
-    for (int i = 0;  i < countof(test_vmath_deg_values);  i++) {
+    ASSERT_EQUAL(_countof(values), _countof(expects));
+    for (int i = 0;  i < _countof(test_vmath_deg_values);  i++) {
         const VmathNumber output = vmath_deg_to_mbr(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -409,7 +349,7 @@ CTEST(vmath, test_vmath_deg_to_mbr) {
 CTEST(vmath, test_vmath_mbr_to_rad) {
     const VmathNumber * values = test_vmath_mbr_values;
     const VmathNumber * expects = test_vmath_rad_values;
-    for (int i = 0;  i < countof(test_vmath_mbr_values);  i++) {
+    for (int i = 0;  i < _countof(test_vmath_mbr_values);  i++) {
         const VmathNumber output = vmath_mbr_to_rad(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -420,7 +360,7 @@ CTEST(vmath, test_vmath_mbr_to_rad) {
 CTEST(vmath, test_vmath_deg_to_rad) {
     const VmathNumber * values = test_vmath_deg_values;
     const VmathNumber * expects = test_vmath_rad_values;
-    for (int i = 0;  i < countof(test_vmath_deg_values);  i++) {
+    for (int i = 0;  i < _countof(test_vmath_deg_values);  i++) {
         const VmathNumber output = vmath_deg_to_rad(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -431,7 +371,7 @@ CTEST(vmath, test_vmath_deg_to_rad) {
 CTEST(vmath, test_vmath_mbr_to_deg) {
     const VmathNumber * values = test_vmath_mbr_values;
     const VmathNumber * expects = test_vmath_deg_values;
-    for (int i = 0;  i < countof(test_vmath_mbr_values);  i++) {
+    for (int i = 0;  i < _countof(test_vmath_mbr_values);  i++) {
         const VmathNumber output = vmath_mbr_to_deg(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -442,7 +382,7 @@ CTEST(vmath, test_vmath_mbr_to_deg) {
 CTEST(vmath, test_vmath_rad_to_deg) {
     const VmathNumber * values = test_vmath_rad_values;
     const VmathNumber * expects = test_vmath_deg_values;
-    for (int i = 0;  i < countof(test_vmath_rad_values);  i++) {
+    for (int i = 0;  i < _countof(test_vmath_rad_values);  i++) {
         const VmathNumber output = vmath_rad_to_deg(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -482,8 +422,8 @@ CTEST(vmath, test_vmath_normalise_mbr) {
             VMATHNUMBER_C( 0.0 ), // 720.0 degrees.
             VMATHNUMBER_C( 1.137777778 ) // 720.4 degrees.
         };
-    ASSERT_EQUAL(countof(test_vmath_mbr_values), countof(expects));
-    for (int i = 0;  i < countof(test_vmath_mbr_values);  i++) {
+    ASSERT_EQUAL(_countof(test_vmath_mbr_values), _countof(expects));
+    for (int i = 0;  i < _countof(test_vmath_mbr_values);  i++) {
         const VmathNumber output = vmath_normalise_mbr(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR(expect, output);
@@ -518,8 +458,8 @@ CTEST(vmath, test_vmath_normalise_rad) {
             VMATHNUMBER_C( 0.0 ), // 720.0 degrees.
             VMATHNUMBER_C( 0.006981317 ) // 720.4 degrees.
         };
-    ASSERT_EQUAL(countof(test_vmath_rad_values), countof(expects));
-    for (int i = 0;  i < countof(test_vmath_rad_values);  i++) {
+    ASSERT_EQUAL(_countof(test_vmath_rad_values), _countof(expects));
+    for (int i = 0;  i < _countof(test_vmath_rad_values);  i++) {
         const VmathNumber output = vmath_normalise_rad(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -554,8 +494,8 @@ CTEST(vmath, test_vmath_normalise_deg) {
             VMATHNUMBER_C( 0.0 ),
             VMATHNUMBER_C( 0.4 )
         };
-    ASSERT_EQUAL(countof(test_vmath_deg_values), countof(expects));
-    for (int i = 0;  i < countof(test_vmath_deg_values);  i++) {
+    ASSERT_EQUAL(_countof(test_vmath_deg_values), _countof(expects));
+    for (int i = 0;  i < _countof(test_vmath_deg_values);  i++) {
         const VmathNumber output = vmath_normalise_deg(values[i]);
         const VmathNumber expect = expects[i];
         ASSERT_DBL_NEAR_TOL(expect, output, 0.000333f);
@@ -639,8 +579,7 @@ CTEST(vmath, test_vmath_matrix3x3_set_scaling) {
 }
 
 
-CTEST(vmath, test_vmath_matrix3x3_set_rotation_clockwise) {
-vmath_init(); //FIXME: !!!!
+CTEST2(vmath, test_vmath_matrix3x3_set_rotation_clockwise) {
     VmathMatrix3x3 matrix = {
             VMATHNUMBER_C(-1.1 ), VMATHNUMBER_C(-1.2 ), VMATHNUMBER_C(-1.3 ),
             VMATHNUMBER_C(-2.1 ), VMATHNUMBER_C(-2.2 ), VMATHNUMBER_C(-2.3 ),
@@ -654,8 +593,7 @@ vmath_init(); //FIXME: !!!!
 }
 
 
-CTEST(vmath, test_vmath_matrix3x3_set_rotation_anticlockwise) {
-vmath_init(); //FIXME: !!!!
+CTEST2(vmath, test_vmath_matrix3x3_set_rotation_anticlockwise) {
     VmathMatrix3x3 matrix = {
             VMATHNUMBER_C(-1.1 ), VMATHNUMBER_C(-1.2 ), VMATHNUMBER_C(-1.3 ),
             VMATHNUMBER_C(-2.1 ), VMATHNUMBER_C(-2.2 ), VMATHNUMBER_C(-2.3 ),
@@ -815,8 +753,7 @@ CTEST(vmath, test_vmath_matrix3x3_upd_scaling) {
 }
 
 
-CTEST(vmath, test_vmath_matrix3x3_upd_rotation_clockwise) {
-vmath_init(); //FIXME: !!!!
+CTEST2(vmath, test_vmath_matrix3x3_upd_rotation_clockwise) {
     VmathMatrix3x3 matrix = {
             VMATHNUMBER_C(-1.1 ), VMATHNUMBER_C(-1.2 ), VMATHNUMBER_C(-1.3 ),
             VMATHNUMBER_C(-2.1 ), VMATHNUMBER_C(-2.2 ), VMATHNUMBER_C(-2.3 ),
@@ -830,8 +767,7 @@ vmath_init(); //FIXME: !!!!
 }
 
 
-CTEST(vmath, test_vmath_matrix3x3_upd_rotation_anticlockwise) {
-vmath_init(); //FIXME: !!!!
+CTEST2(vmath, test_vmath_matrix3x3_upd_rotation_anticlockwise) {
     VmathMatrix3x3 matrix = {
             VMATHNUMBER_C(-1.1 ), VMATHNUMBER_C(-1.2 ), VMATHNUMBER_C(-1.3 ),
             VMATHNUMBER_C(-2.1 ), VMATHNUMBER_C(-2.2 ), VMATHNUMBER_C(-2.3 ),
@@ -1018,12 +954,10 @@ CTEST(vmath, test_vmath_matrix3x3_multiply_matrix3x1_result) {
 
 
 //-----------------------------------------------------------------------------
-// Update a Previously Set 3x3 Matrix Transformation With New Values.
+// Main Application Entry Point.
 //-----------------------------------------------------------------------------
 
-int main(int argc, const char *argv[])
-{
-    return ctest_main(argc, argv);
-}
+// Function main() implementation.
+CTESTX_MAIN
 
 

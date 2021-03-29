@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-25 21:04
-// Version:      1.0.0-alpha-1
+// Date:         2021-03-27 14:56
+// Version:      1.0.0-alpha-4
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -55,22 +55,38 @@ typedef struct VdrawContext {
     int width;
     // Renderer pixel height.
     int height;
-    // Current background and foreground colours and foreground intensity.
+    // Current background and foreground colours used for drawing.
     VdrawRGB background_colour;
     VdrawRGB foreground_colour;
-    VmathNumber foreground_intensity;
-    // Enablement, min and max colour bounds for the foreground intensity.
-    bool foreground_colour_min_max_enable; // Enable specific min and max intensity range else 0 - 255.
-    VdrawRGB foreground_colour_min;
-    VdrawRGB foreground_colour_max;
+    // The width of the pen used to draw on the foreground.
+    VmathNumber pen_width;
+    // The foreground colour requested and its intensity value.
+    // Used to populate foreground_colour.
+    VdrawRGB    foreground_colour_requested;
+    VmathNumber foreground_colour_intensity;
+    // Colour graduation fading.
+    // Used to populate foreground_colour_requested or foreground_colour.
+    VdrawRGB    foreground_colour_fade_min;
+    VdrawRGB    foreground_colour_fade_max;
+    VmathNumber foreground_colour_fade_val;
     // Vector display intensity shimmer wave enablement, size, mbr angle and speed;
-    bool foreground_intensity_wave_enable; // Automatically update intensity on each frame.
+    // Used to populate foreground_intensity.
     VmathNumber foreground_intensity_wave_size;
     VmathNumber foreground_intensity_wave_mbr_angle;
     VmathNumber foreground_intensity_wave_mbr_speed;
-    // The width of the pen used to draw on the foreground.
-    VmathNumber pen_width;
 } VdrawContext;
+
+
+
+//-----------------------------------------------------------------------------
+// Primitive Drawing Utility Functions.
+//-----------------------------------------------------------------------------
+
+// Order line to always draw to the right and then down.
+void vdraw_order_line(const VmathNumber x1a, const VmathNumber y1a,
+                      const VmathNumber x2a, const VmathNumber y2a,
+                      VmathNumber * x1b, VmathNumber * y1b,
+                      VmathNumber * x2b, VmathNumber * y2b);
 
 
 
@@ -91,7 +107,7 @@ void vdraw_done(VdrawContext * vdraw);
 // Primitive Drawing State Functions.
 //-----------------------------------------------------------------------------
 
-// Set the background colour to use when clearing or drawing to the screen.
+// Set the background colour to use when clearing the screen.
 void vdraw_set_bg_colour(VdrawContext * vdraw,
                          const uint8_t red,
                          const uint8_t green,
@@ -103,52 +119,63 @@ void vdraw_set_fg_colour(VdrawContext * vdraw,
                          const uint8_t green,
                          const uint8_t blue);
 
-// Update the foreground colour with the current intensity and min/max range.
-void vdraw_upd_fg_colour(struct VdrawContext * vdraw);
-
-// Set the foreground intensity to use when drawing to the screen.
-void vdraw_set_fg_intensity(VdrawContext * vdraw,
-                            const VmathNumber intensity);
-
-// Update the foreground intensity wave setting the foreground intensity.
-void vdraw_upd_fg_intensity_wave(struct VdrawContext * vdraw);
-
-// Set the foreground colour min and max enablement.
-void vdraw_set_fg_colour_min_max_enable(VdrawContext * vdraw,
-                                        const bool enable);
-
-// Set the max foreground colour and the foreground and min foreground colors given the intensity range.
-void vdraw_set_fg_colour_min_max_range(VdrawContext * vdraw,
-                                       const uint8_t red,
-                                       const uint8_t green,
-                                       const uint8_t blue,
-                                       const VmathNumber intensity_size);
-
-// Set the minimum foreground colour.
-void vdraw_set_fg_colour_min(VdrawContext * vdraw,
-                             const uint8_t red,
-                             const uint8_t green,
-                             const uint8_t blue);
-
-// Set the max foreground colour.
-void vdraw_set_fg_colour_max(VdrawContext * vdraw,
-                             const uint8_t red,
-                             const uint8_t green,
-                             const uint8_t blue);
-
-// Set the foreground intensity wave efeect enablement.
-void vdraw_set_fg_intensity_wave_enable(VdrawContext * vdraw,
-                                        const bool enable);
-
-// Set the foreground intensity wave effect configuration values.
-void vdraw_set_fg_intensity_wave_values(VdrawContext * vdraw,
-                                        const VmathNumber size,
-                                        const VmathNumber mbr_angle,
-                                        const VmathNumber mbr_speed);
 
 // Set the pen width.
 void vdraw_set_pen_width(VdrawContext * vdraw,
                          const VmathNumber pen_width);
+
+
+// Set the requested foreground colour.
+void vdraw_set_fg_colour_requested(VdrawContext * vdraw,
+                                   const uint8_t red,
+                                   const uint8_t green,
+                                   const uint8_t blue);
+
+// Set the foreground colour intensity.
+void vdraw_set_fg_colour_intensity(VdrawContext * vdraw,
+                                   const VmathNumber intensity);
+
+// Update the foreground colour with the requested colour and intensity.
+void vdraw_upd_fg_colour_from_requested_and_intensity(VdrawContext * vdraw);
+
+
+// Set foreground colour fade value (0.0 = fade_min, 1.0 = fade_max).
+void vdraw_set_fg_colour_fade_val(VdrawContext * vdraw,
+                                  const VmathNumber fade_value);
+
+// Set foreground colour fade minimum RGB values.
+void vdraw_set_fg_colour_fade_min(VdrawContext * vdraw,
+                                  const uint8_t red,
+                                  const uint8_t green,
+                                  const uint8_t blue);
+
+// Set foreground colour fade maximum RGB values.
+void vdraw_set_fg_colour_fade_max(VdrawContext * vdraw,
+                                  const uint8_t red,
+                                  const uint8_t green,
+                                  const uint8_t blue);
+
+// Update the requested foreground colour from the fade values.
+void vdraw_upd_fg_colour_requested_from_fade(VdrawContext * vdraw);
+
+
+// Set the foreground intensities wave size (0.0 to 1.0).
+void vdraw_set_fg_intensity_wave_size(VdrawContext * vdraw,
+                                      const VmathNumber wave_size);
+
+// Set the foreground intensities wave MBR angle value.
+void vdraw_set_fg_intensity_wave_mbr_angle(VdrawContext * vdraw,
+                                           const VmathNumber wave_mbr_angle);
+
+// Set the foreground intensities wave MBR speed of rotation value.
+void vdraw_set_fg_intensity_wave_mbr_speed(VdrawContext * vdraw,
+                                           const VmathNumber wave_mbr_speed);
+
+// Update wave rotation value by the current speed of rotation.
+void vdraw_upd_fg_intensity_wave_mbr_angle(VdrawContext * vdraw);
+
+// Update the foreground colour intensity from the wave values.
+void vdraw_update_fg_colour_intensity_from_wave(VdrawContext * vdraw);
 
 
 
@@ -170,7 +197,7 @@ void vdraw_line(const VdrawContext * vdraw,
                 const VmathNumber x2, const VmathNumber y2);
 
 // Render all screen drawing since the last call to vdraw_flip().
-void vdraw_flip(const VdrawContext * vdraw); // Calls vdraw_upd_fg_intensity_wave() if enabled. Note does not set current colour.
+void vdraw_flip_screen(VdrawContext * vdraw);
 
 
 

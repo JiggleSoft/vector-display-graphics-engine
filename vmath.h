@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-24 21:55
-// Version:      1.0.0-beta-1
+// Date:         2021-03-28 13:52
+// Version:      1.0.0-beta-2
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -36,7 +36,11 @@
 
 // Constant
 
+// Constant from real number.
 #define VMATHNUMBER_C(v) (v ## f)
+
+// Stdio format string.
+#define VMATHNUMBER_FMT "%f"
 
 
 //-----------------------------------------------------------------------------
@@ -79,6 +83,23 @@ void vmath_init(void);
 
 // Clean-up the math library.
 void vmath_done(void);
+
+
+//-----------------------------------------------------------------------------
+// Clipping Functions.
+//-----------------------------------------------------------------------------
+
+// Clip to a floor clipping value. Returns value but no less than clip.
+VmathNumber vmath_clip_floor(const VmathNumber value, const VmathNumber clip);
+
+// Clip to a ceiling clipping value. Returns value but no greater than clip.
+VmathNumber vmath_clip_ceil(const VmathNumber value, const VmathNumber clip);
+
+// Clip to a floor and ceiling clipping values.
+// Returns value but no less than clip_floor and no greater than clip_ceil.
+VmathNumber vmath_clip_floor_ceil(const VmathNumber value,
+                                  const VmathNumber clip_floor,
+                                  const VmathNumber clip_ceil);
 
 
 //-----------------------------------------------------------------------------

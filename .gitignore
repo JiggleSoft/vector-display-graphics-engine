@@ -1,8 +1,23 @@
+# Project
+ctest.h
+
+
+
 # VIM temporary file
 *.swp
 
 # CMake build directory
 cmake-build*/
+
+
+# Files to not be checked in
+lost-and-found/
+skunkworks/
+scratch/
+randd/
+noddy/
+wip/
+t/
 
 
 

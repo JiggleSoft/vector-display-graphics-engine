@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-29 17:47
-// Version:      1.0.0-beta-3
+// Date:         2021-04-10 23:03
+// Version:      1.0.0-beta-4
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //

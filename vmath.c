@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-28 13:52
-// Version:      1.0.0-beta-2
+// Date:         2021-04-10 23:03
+// Version:      1.0.0-beta-4
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -462,7 +462,7 @@ void vmath_matrix3x3_multiply_matrix3x3_fast(const VmathMatrix3x3 matrix1, const
 
 
 // Multiply a 3x3 matrix by a 3x3 matrix storing the result into a 3x3 matrix (matrix1 or matrix2 may equal result).
-void vmath_matrix3x3_multiply_matrix3x3(VmathMatrix3x3 matrix1, VmathMatrix3x3 matrix2, VmathMatrix3x3 result)
+void vmath_matrix3x3_multiply_matrix3x3(const VmathMatrix3x3 matrix1, const VmathMatrix3x3 matrix2, VmathMatrix3x3 result)
 {
     if ((matrix2 == result) || (matrix1 == result)) {
         VmathMatrix3x3 temp_result;
@@ -475,7 +475,7 @@ void vmath_matrix3x3_multiply_matrix3x3(VmathMatrix3x3 matrix1, VmathMatrix3x3 m
         temp_result[2][0] = (matrix1[2][0] * matrix2[0][0]) + (matrix1[2][1] * matrix2[1][0]) + (matrix1[2][2] * matrix2[2][0]);
         temp_result[2][1] = (matrix1[2][0] * matrix2[0][1]) + (matrix1[2][1] * matrix2[1][1]) + (matrix1[2][2] * matrix2[2][1]);
         temp_result[2][2] = (matrix1[2][0] * matrix2[0][2]) + (matrix1[2][1] * matrix2[1][2]) + (matrix1[2][2] * matrix2[2][2]);
-        memcpy(matrix2 == result ? matrix2 : matrix1, temp_result, sizeof(temp_result));
+        memcpy(result, temp_result, sizeof(temp_result));
     } else {
         result[0][0] = (matrix1[0][0] * matrix2[0][0]) + (matrix1[0][1] * matrix2[1][0]) + (matrix1[0][2] * matrix2[2][0]);
         result[0][1] = (matrix1[0][0] * matrix2[0][1]) + (matrix1[0][1] * matrix2[1][1]) + (matrix1[0][2] * matrix2[2][1]);
@@ -501,14 +501,14 @@ void vmath_matrix3x3_multiply_matrix3x1_fast(const VmathMatrix3x3 matrix1, const
 
 
 // Multiply a 3x3 matrix by a 3x1 matrix storing the result into a 3x1 matrix (matrix2 may equal result).
-void vmath_matrix3x3_multiply_matrix3x1(const VmathMatrix3x3 matrix1, VmathMatrix3x1 matrix2, VmathMatrix3x1 result)
+void vmath_matrix3x3_multiply_matrix3x1(const VmathMatrix3x3 matrix1, const VmathMatrix3x1 matrix2, VmathMatrix3x1 result)
 {
     if (matrix2 == result) {
         VmathMatrix3x1 temp_result;
         temp_result[0] = (matrix1[0][0] * matrix2[0]) + (matrix1[0][1] * matrix2[1]) + (matrix1[0][2] * matrix2[2]);
         temp_result[1] = (matrix1[1][0] * matrix2[0]) + (matrix1[1][1] * matrix2[1]) + (matrix1[1][2] * matrix2[2]);
         temp_result[2] = (matrix1[2][0] * matrix2[0]) + (matrix1[2][1] * matrix2[1]) + (matrix1[2][2] * matrix2[2]);
-        memcpy(matrix2, temp_result, sizeof(temp_result));
+        memcpy(result, temp_result, sizeof(temp_result));
     } else {
         result[0] = (matrix1[0][0] * matrix2[0]) + (matrix1[0][1] * matrix2[1]) + (matrix1[0][2] * matrix2[2]);
         result[1] = (matrix1[1][0] * matrix2[0]) + (matrix1[1][1] * matrix2[1]) + (matrix1[1][2] * matrix2[2]);

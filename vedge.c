@@ -151,6 +151,165 @@ void vedge_done(VedgeContext * vedge)
 }
 
 
+
+
+
+
+
+void vedge_handle_event(VedgeContext * vedge, SDL_Event * event)
+{
+    assert (vedge != NULL);
+    assert (event != NULL);
+    VedgeEventHandlers * handlers = &vedge->event_handlers;
+    switch (event->type)
+    {
+        case SDL_FIRSTEVENT:
+            break;
+        case SDL_QUIT:
+            if (handlers->quit_handler != NULL) {
+                handlers->quit_handler(vedge, (SDL_QuitEvent *)event);
+            }
+            break;
+        SDL_APP_TERMINATING:
+            break;
+        case SDL_APP_LOWMEMORY:
+//            if (handlers->handler != NULL) {
+//                handlers->quit_handler(vedge, (SDL_QuitEvent *)event);
+//            }
+            break;
+        case SDL_APP_WILLENTERBACKGROUND:
+            break;
+        case SDL_APP_DIDENTERBACKGROUND:
+            break;
+        case SDL_APP_WILLENTERFOREGROUND:
+            break;
+        case  SDL_APP_DIDENTERFOREGROUND:
+            break;
+        case   SDL_WINDOWEVENT:
+            if (handlers->window_handler != NULL) {
+                handlers->window_handler(vedge, (SDL_WindowEvent *)event);
+            }
+            break;
+        case SDL_SYSWMEVENT:
+            break;
+        case SDL_KEYDOWN:
+            if (handlers->key_handler != NULL) {
+                handlers->key_handler(vedge, (SDL_KeyboardEvent *)event);
+            }
+            break;
+        case SDL_KEYUP:
+            if (handlers->key_handler != NULL) {
+                handlers->key_handler(vedge, (SDL_KeyboardEvent *)event);
+            }
+            break;
+        case SDL_TEXTEDITING:
+            break;
+        case SDL_TEXTINPUT:
+            break;
+        case SDL_KEYMAPCHANGED:
+            break;
+        case SDL_MOUSEMOTION:
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            break;
+        case SDL_MOUSEBUTTONUP:
+            break;
+        case SDL_MOUSEWHEEL:
+            break;
+        case SDL_JOYAXISMOTION:
+            break;
+        case SDL_JOYBALLMOTION:
+            if (handlers->jball_handler != NULL) {
+                handlers->jball_handler(vedge, (SDL_JoyBallEvent *)event);
+            }
+            break;
+        case SDL_JOYHATMOTION:
+            if (handlers->jhat_handler != NULL) {
+                handlers->jhat_handler(vedge, (SDL_JoyHatEvent *)event);
+            }
+            break;
+        case SDL_JOYBUTTONDOWN:
+            break;
+        case SDL_JOYBUTTONUP:
+            break;
+        case SDL_JOYDEVICEADDED:
+            break;
+        case SDL_JOYDEVICEREMOVED:
+            break;
+        case SDL_CONTROLLERAXISMOTION:
+            break;
+        case SDL_CONTROLLERBUTTONDOWN:
+            break;
+        case SDL_CONTROLLERBUTTONUP:
+            break;
+        case SDL_CONTROLLERDEVICEADDED:
+            break;
+        case SDL_CONTROLLERDEVICEREMOVED:
+            break;
+        case SDL_CONTROLLERDEVICEREMAPPED:
+            break;
+        case SDL_FINGERDOWN:
+            break;
+        case SDL_DOLLARGESTURE:
+            break;
+        case  SDL_CLIPBOARDUPDATE:
+            break;
+        case
+            SDL_DROPFILE:
+            break;
+        case SDL_DROPTEXT:
+            break;
+        case SDL_DROPBEGIN:
+            break;
+        case SDL_DROPCOMPLETE:
+            break;
+        case SDL_AUDIODEVICEADDED :
+            break;
+        case SDL_AUDIODEVICEREMOVED:
+            break;
+        case SDL_RENDER_TARGETS_RESET:
+            break;
+        case SDL_RENDER_DEVICE_RESET:
+            break;
+        default:
+            if (event->type >= SDL_USEREVENT) {
+                //handlers->u
+            } else {
+                // unknown
+            }
+    }
+}
+
+
+void vedge_handle_events(VedgeEventHandlers * handlers)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event) != 0)
+    {
+
+        //call general event handler vedge_event(&event);
+        //call specific event handlers
+        //User requests quit
+        if (event.type == SDL_QUIT) {
+            //FIXME: quit = 1;
+        }
+
+        //FIXME:vedge_handle_event(handlers, &event)
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+// .
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// .
+//-----------------------------------------------------------------------------
+
+// .
+
 //-----------------------------------------------------------------------------
 // Vector Display Graphics Engine Main Loop and Event Processing.
 //-----------------------------------------------------------------------------
@@ -176,14 +335,18 @@ int vedge_run(VedgeContext * vedge)
     {
         while (SDL_PollEvent(&event) != 0)
         {
+
             //call general event handler vedge_event(&event);
             //call specific event handlers
             //User requests quit
             if (event.type == SDL_QUIT) {
                 quit = 1;
             }
+
+           //FIXME:  event.type == SDL_Q
         }
 
+//        if (vedge->handlers.)
 
 printf("%d %d %d   %d %d %d   %f   %f %f %f\n",
        VEDGE_VDRAW(vedge)->foreground_colour.red,
@@ -256,6 +419,45 @@ if (x > 2048) {
 //    vdraw_point(VEDGE_VDRAW(vedge), z+ ((x %1024) * 10), z);
 //}
         vdraw_set_pen_width(VEDGE_VDRAW(vedge), 1.0);
+
+
+VmathMatrix3x3 cam_pos;
+VmathMatrix3x3 cam_siz;
+VmathMatrix3x3 cam_rot;
+VmathMatrix3x3 cam;
+
+VmathMatrix3x3 obj_pos;
+VmathMatrix3x3 obj_siz;
+VmathMatrix3x3 obj_rot;
+VmathMatrix3x3 obj;
+
+VmathMatrix3x3 vpt_pos;
+VmathMatrix3x3 vpt_siz;
+VmathMatrix3x3 vpt;
+
+VmathNumber cam_tx = VMATHNUMBER_C(0.0);
+VmathNumber cam_ty = VMATHNUMBER_C(0.0);
+VmathNumber cam_sx = VMATHNUMBER_C(0.0);
+VmathNumber cam_sy = VMATHNUMBER_C(0.0);
+VmathNumber cam_an = VMATHNUMBER_C(0.0);
+
+vmath_matrix3x3_set_translation(&cam_pos, cam_tx, cam_ty);
+vmath_matrix3x3_set_scaling(&cam_pos, cam_sx, cam_sy);
+vmath_matrix3x3_set_rotation_clockwise(&cam_pos, cam_an);
+
+vmath_matrix3x3_upd_translation(&cam_pos, cam_tx, cam_ty);
+vmath_matrix3x3_upd_scaling(&cam_pos, cam_sx, cam_sy);
+vmath_matrix3x3_upd_rotation_clockwise(&cam_pos, cam_an);
+
+vmath_matrix3x3_multiply_matrix3x1_fast(cam_pos, cam_siz, cam);
+vmath_matrix3x3_multiply_matrix3x1(cam, cam_rot, cam);
+
+
+
+
+
+
+
 
 
         vdraw_flip_screen(VEDGE_VDRAW(vedge));

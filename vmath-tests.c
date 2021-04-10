@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-29 17:47
-// Version:      1.0.0-beta-3
+// Date:         2021-04-10 23:03
+// Version:      1.0.0-beta-4
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -854,7 +854,7 @@ CTEST(vmath, test_vmath_matrix3x3_multiply_matrix3x3_matrix1) {
             VMATHNUMBER_C(-11.11 ), VMATHNUMBER_C(11.22 ), VMATHNUMBER_C(-11.33 ),
             VMATHNUMBER_C(22.11 ), VMATHNUMBER_C(-22.22 ), VMATHNUMBER_C(-22.33 ),
             VMATHNUMBER_C(-33.11 ), VMATHNUMBER_C(-33.22 ), VMATHNUMBER_C(-33.33 ), };
-    VmathMatrix3x3 * result = matrix1;
+    VmathMatrix3x3 * result = (VmathMatrix3x3 *)matrix1;
     const VmathMatrix3x3 expect = {
             VMATHNUMBER_C(28.732 ), VMATHNUMBER_C(57.508 ), VMATHNUMBER_C(82.588 ),
             VMATHNUMBER_C(50.842 ), VMATHNUMBER_C(101.728 ), VMATHNUMBER_C(149.578 ),

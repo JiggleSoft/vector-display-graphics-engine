@@ -14,7 +14,7 @@
 | vmath.h          | 100%   | Version 1.0.0-beta-4 |
 | vmath.c          | 100%   | Version 1.0.0-beta-4 |
 | vmath-ctest.h    | 100%   | Version 1.0.0-beta-4 |
-| vmath-tests.c    | 100%   | Version 1.0.0-beta-4 |
+| vmath-tests.c    | 100%   | Version 1.0.0-beta-5 |
 | vdraw.h          |  90%   | Version 1.0.0-alpha-4 |
 | vdraw.c          |  90%   | Version 1.0.0-alpha-4 |
 | vdraw-ctest.h    |  90%   | Version 1.0.0-alpha-1 |

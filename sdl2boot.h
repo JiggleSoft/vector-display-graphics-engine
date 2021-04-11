@@ -135,44 +135,22 @@ void sdl2boot_done(Sdl2BootContext * sdl2boot);
 //-----------------------------------------------------------------------------
 
 // Has SDL Boot been fully initialised successfully.
-inline const bool sdl2boot_is_initialised(const Sdl2BootContext * sdl2boot)
-{
-    return sdl2boot->state.initialised;
-}
+const bool sdl2boot_is_initialised(const Sdl2BootContext * sdl2boot);
 
 // Get the SDL windows for an SDL Boot context.
-inline SDL_Window * sdl2boot_get_window(const Sdl2BootContext * sdl2boot)
-{
-    return sdl2boot->state.window;
-}
+SDL_Window * sdl2boot_get_window(const Sdl2BootContext * sdl2boot);
 
 // Get the SDL Boot renderer for an SDL Boot context.
-inline SDL_Renderer * sdl2boot_get_renderer(const Sdl2BootContext * sdl2boot)
-{
-    return sdl2boot->state.renderer;
-}
-
+SDL_Renderer * sdl2boot_get_renderer(const Sdl2BootContext * sdl2boot);
 
 // Get the display mode for an SDL Boot context.
-inline const SDL_DisplayMode * sdl2boot_get_display_mode(const Sdl2BootContext * sdl2boot)
-{
-    return &sdl2boot->state.display_mode;
-}
-
+const SDL_DisplayMode * sdl2boot_get_display_mode(const Sdl2BootContext * sdl2boot);
 
 // Get the renderer width for an SDL Boot context.
-inline const int sdl2boot_get_render_width(const Sdl2BootContext * sdl2boot)
-{
-    return sdl2boot->state.renderer_width;
-}
-
+const int sdl2boot_get_render_width(const Sdl2BootContext * sdl2boot);
 
 // Get the renderer height for an SDL Boot context.
-inline const int sdl2boot_get_render_height(const Sdl2BootContext * sdl2boot)
-{
-    return sdl2boot->state.renderer_height;
-}
-
+const int sdl2boot_get_render_height(const Sdl2BootContext * sdl2boot);
 
 
 #endif /* __SDL2BOOT__H__ */

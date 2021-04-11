@@ -180,3 +180,46 @@ void sdl2boot_done(Sdl2BootContext * sdl2boot)
 }
 
 
+
+//-----------------------------------------------------------------------------
+// Context State Access Functions and Macros.
+//-----------------------------------------------------------------------------
+
+// Has SDL Boot been fully initialised successfully.
+const bool sdl2boot_is_initialised(const Sdl2BootContext * sdl2boot)
+{
+    return sdl2boot->state.initialised;
+}
+
+// Get the SDL windows for an SDL Boot context.
+SDL_Window * sdl2boot_get_window(const Sdl2BootContext * sdl2boot)
+{
+    return sdl2boot->state.window;
+}
+
+// Get the SDL Boot renderer for an SDL Boot context.
+SDL_Renderer * sdl2boot_get_renderer(const Sdl2BootContext * sdl2boot)
+{
+    return sdl2boot->state.renderer;
+}
+
+
+// Get the display mode for an SDL Boot context.
+const SDL_DisplayMode * sdl2boot_get_display_mode(const Sdl2BootContext * sdl2boot)
+{
+    return &sdl2boot->state.display_mode;
+}
+
+
+// Get the renderer width for an SDL Boot context.
+const int sdl2boot_get_render_width(const Sdl2BootContext * sdl2boot)
+{
+    return sdl2boot->state.renderer_width;
+}
+
+
+// Get the renderer height for an SDL Boot context.
+const int sdl2boot_get_render_height(const Sdl2BootContext * sdl2boot)
+{
+    return sdl2boot->state.renderer_height;
+}

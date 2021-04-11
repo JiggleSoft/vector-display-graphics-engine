@@ -54,6 +54,7 @@ int main(int argc, char * argv[])
     if (sdl2boot_init(&sdl2boot, &sdl2boot_config))
     {
         vedge_config_sdl2boot(&vedge_config, &sdl2boot);
+        //FIXME: !!!vedge_add_handler(&vedge, )
         if (vedge_init(&vedge, &vedge_config))
         {
             vedge_run(&vedge);
@@ -65,3 +66,7 @@ int main(int argc, char * argv[])
 }
 
 
+int game_init(VedgeContext vedge)
+{
+
+}

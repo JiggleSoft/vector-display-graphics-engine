@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-04-10 23:03
-// Version:      1.0.0-beta-4
+// Date:         2021-04-11 22:08
+// Version:      1.0.0-beta-5
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -859,8 +859,8 @@ CTEST(vmath, test_vmath_matrix3x3_multiply_matrix3x3_matrix1) {
             VMATHNUMBER_C(28.732 ), VMATHNUMBER_C(57.508 ), VMATHNUMBER_C(82.588 ),
             VMATHNUMBER_C(50.842 ), VMATHNUMBER_C(101.728 ), VMATHNUMBER_C(149.578 ),
             VMATHNUMBER_C(72.952 ), VMATHNUMBER_C(145.948 ), VMATHNUMBER_C(216.568 ), };
-    vmath_matrix3x3_multiply_matrix3x3(matrix1, matrix2, result);
-    ASSERT_MATRIX3X3_EQUAL_TOL(expect, result, 0.000333f);
+    vmath_matrix3x3_multiply_matrix3x3(matrix1, matrix2, *result);
+    ASSERT_MATRIX3X3_EQUAL_TOL(expect, *result, 0.000333f);
 }
 
 
@@ -873,13 +873,13 @@ CTEST(vmath, test_vmath_matrix3x3_multiply_matrix3x3_matrix2) {
             VMATHNUMBER_C(-11.11 ), VMATHNUMBER_C(11.22 ), VMATHNUMBER_C(-11.33 ),
             VMATHNUMBER_C(22.11 ), VMATHNUMBER_C(-22.22 ), VMATHNUMBER_C(-22.33 ),
             VMATHNUMBER_C(-33.11 ), VMATHNUMBER_C(-33.22 ), VMATHNUMBER_C(-33.33 ), };
-    VmathMatrix3x3 * result = matrix2;
+    VmathMatrix3x3 * result = (VmathMatrix3x3 *)matrix2;
     const VmathMatrix3x3 expect = {
             VMATHNUMBER_C(28.732 ), VMATHNUMBER_C(57.508 ), VMATHNUMBER_C(82.588 ),
             VMATHNUMBER_C(50.842 ), VMATHNUMBER_C(101.728 ), VMATHNUMBER_C(149.578 ),
             VMATHNUMBER_C(72.952 ), VMATHNUMBER_C(145.948 ), VMATHNUMBER_C(216.568 ), };
-    vmath_matrix3x3_multiply_matrix3x3(matrix1, matrix2, result);
-    ASSERT_MATRIX3X3_EQUAL_TOL(expect, result, 0.000333f);
+    vmath_matrix3x3_multiply_matrix3x3(matrix1, matrix2, *result);
+    ASSERT_MATRIX3X3_EQUAL_TOL(expect, *result, 0.000333f);
 }
 
 
@@ -926,13 +926,13 @@ CTEST(vmath, test_vmath_matrix3x3_multiply_matrix3x1_matrix2) {
             VMATHNUMBER_C(1.1 ), VMATHNUMBER_C(1.2 ), VMATHNUMBER_C(-1.3 ),
             VMATHNUMBER_C(2.1 ), VMATHNUMBER_C(2.2 ), VMATHNUMBER_C(-2.3 ),
             VMATHNUMBER_C(3.1 ), VMATHNUMBER_C(3.2 ), VMATHNUMBER_C(-3.3 ), };
-    VmathMatrix3x1 matrix2 = {
+    const VmathMatrix3x1 matrix2 = {
             VMATHNUMBER_C(11.11 ), VMATHNUMBER_C(11.12 ), VMATHNUMBER_C(-11.13 ) };
-    VmathMatrix3x1 * result = matrix2;
+    VmathMatrix3x1 * result = (VmathMatrix3x1 *)matrix2;
     const VmathMatrix3x1 expect = {
             VMATHNUMBER_C(40.034 ), VMATHNUMBER_C(73.394 ), VMATHNUMBER_C(106.754 ) };
-    vmath_matrix3x3_multiply_matrix3x1(matrix1, matrix2, result);
-    ASSERT_MATRIX3X1_EQUAL(expect, result);
+    vmath_matrix3x3_multiply_matrix3x1(matrix1, matrix2, *result);
+    ASSERT_MATRIX3X1_EQUAL(expect, *result);
 }
 
 

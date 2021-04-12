@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-29 19:17
-// Version:      1.0.0-alpha-1
+// Date:         2021-04-12 22:59
+// Version:      1.0.0-alpha-2
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -54,7 +54,7 @@ CTEST_DATA(vdraw_integration)
 
 CTEST_SETUP(vdraw_integration)
 {
-    sdl2boot_config_template(&data->sdl2boot_config, NULL);
+    sdl2boot_config_from_template(&data->sdl2boot_config, NULL);
     ASSERT_TRUE(sdl2boot_init(&data->sdl2boot, &data->sdl2boot_config));
     ASSERT_TRUE(vdraw_init(&data->vdraw, data->sdl2boot.state.renderer));
 }

@@ -6,11 +6,11 @@
 | File             | Status | Notes |
 | ---------------- | ------ | -----------------------------------------------|
 | CMakeLists.txt   |  50%   | CMake build file. |
-| ctestx.h         | 100%   | Version 1.0.0-beta-1 |
-| sdl2boot.c       | 100%   | Version 1.0.0-beta-1 |
-| sdl2boot.h       | 100%   | Version 1.0.0-beta-1 |
-| sdl2boot-ctest.h |   5%   | WORK-IN-PROGRESS |
-| sdl2boot-tests.h |   5%   | WORK-IN-PROGRESS |
+| ctestx.h         | 100%   | Version 1.0.0-beta-2 |
+| sdl2boot.c       | 100%   | Version 1.0.0-beta-2 |
+| sdl2boot.h       | 100%   | Version 1.0.0-beta-2 |
+| sdl2boot-ctest.h |  50%   | Version 1.0.0-alpha-1 |
+| sdl2boot-tests.h |  50%   | Version 1.0.0-alpha-2 |
 | vmath.h          | 100%   | Version 1.0.0-beta-4 |
 | vmath.c          | 100%   | Version 1.0.0-beta-4 |
 | vmath-ctest.h    | 100%   | Version 1.0.0-beta-4 |
@@ -18,7 +18,7 @@
 | vdraw.h          |  90%   | Version 1.0.0-alpha-4 |
 | vdraw.c          |  90%   | Version 1.0.0-alpha-4 |
 | vdraw-ctest.h    |  90%   | Version 1.0.0-alpha-1 |
-| vdraw-tests.c    |  90%   | Version 1.0.0-alpha-1 |
+| vdraw-tests.c    |  90%   | Version 1.0.0-alpha-2 |
 | vedge.c          |  20%   | Version 1.0.0-alpha-1 |
 | vedge-debug.h    |  20%   | Version 1.0.0-alpha-1 |
 | vedge.h          |  20%   | Version 1.0.0-alpha-1 |

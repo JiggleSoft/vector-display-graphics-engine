@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-04-11 20:11
-// Version:      1.0.0-alpha-1
+// Date:         2021-04-12 22:55
+// Version:      1.0.0-alpha-2
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -49,7 +49,7 @@ CTEST_DATA(sdl2boot)
 
 CTEST_SETUP(sdl2boot)
 {
-    sdl2boot_config_template(&data->sdl2boot_config, NULL);
+    sdl2boot_config_from_template(&data->sdl2boot_config, NULL);
     ASSERT_TRUE(sdl2boot_init(&data->sdl2boot, &data->sdl2boot_config));
 }
 
@@ -71,13 +71,41 @@ CTEST_TEARDOWN(sdl2boot)
 // Test Configuration Functions..
 //-----------------------------------------------------------------------------
 
-CTEST(sdl2boot, test_sdl2boot_config_template) {
-    ASSERT_FAIL();
+CTEST(sdl2boot, test_sdl2boot_config_from_template_null) {
+    Sdl2BootConfig  sdl2boot_config;
+    sdl2boot_config_from_template(&sdl2boot_config, NULL);
+    ASSERT_EQUAL_U((SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK), sdl2boot_config.init_subsystems);
+    ASSERT_CSTR_EQUAL("SDL 2 Boot version 1.0.0-beta-0 by Justin Lane.", sdl2boot_config.window_title);
+    ASSERT_EQUAL_U((SDL_WINDOW_FULLSCREEN_DESKTOP), sdl2boot_config.window_flags);
+    ASSERT_EQUAL_U((SDL_RENDERER_SOFTWARE), sdl2boot_config.renderer_flags);
+}
+
+
+CTEST(sdl2boot, test_sdl2boot_config_from_template_copy) {
+    Sdl2BootConfig  sdl2boot_config_template;
+    memset(&sdl2boot_config_template, 88, sizeof(sdl2boot_config_template));
+    sdl2boot_config_template.init_subsystems = 62373723U;
+    sdl2boot_config_template.window_title = "TEMPLATE_TITLE";
+    sdl2boot_config_template.window_flags = 98318724U;
+    sdl2boot_config_template.renderer_flags = 74312113U;
+    Sdl2BootConfig  sdl2boot_config;
+    memset(&sdl2boot_config, 99, sizeof(sdl2boot_config));
+    sdl2boot_config_from_template(&sdl2boot_config, &sdl2boot_config_template);
+    ASSERT_EQUAL_U(62373723U, sdl2boot_config.init_subsystems);
+    ASSERT_CSTR_EQUAL("TEMPLATE_TITLE", sdl2boot_config.window_title);
+    ASSERT_EQUAL_U(98318724U, sdl2boot_config.window_flags);
+    ASSERT_EQUAL_U(74312113U, sdl2boot_config.renderer_flags);
 }
 
 
 CTEST(sdl2boot, test_sdl2boot_config_primary_desktop) {
-    ASSERT_FAIL();
+    Sdl2BootConfig  sdl2boot_config;
+    memset(&sdl2boot_config, 99, sizeof(sdl2boot_config));
+    sdl2boot_config_primary_desktop(&sdl2boot_config, 262373723U, "TEMPLATE_TITLE", 398318724U, 474312113U);
+    ASSERT_EQUAL_U(262373723U, sdl2boot_config.init_subsystems);
+    ASSERT_CSTR_EQUAL("TEMPLATE_TITLE", sdl2boot_config.window_title);
+    ASSERT_EQUAL_U(398318724U, sdl2boot_config.window_flags);
+    ASSERT_EQUAL_U(474312113U, sdl2boot_config.renderer_flags);
 }
 
 
@@ -86,13 +114,12 @@ CTEST(sdl2boot, test_sdl2boot_config_primary_desktop) {
 // Test Lifecycle Management Functions.
 //-----------------------------------------------------------------------------
 
-CTEST(sdl2boot, test_sdl2boot_init) {
-    ASSERT_FAIL();
+CTEST2(sdl2boot, test_sdl2boot_init) {
 }
 
 
-CTEST(sdl2boot, test_sdl2boot_done) {
-    ASSERT_FAIL();
+CTEST2(sdl2boot, test_sdl2boot_done) {
+    sdl2boot_done(&data->sdl2boot);
 }
 
 
@@ -109,27 +136,31 @@ CTEST2(sdl2boot, test_sdl2boot_is_initialised) {
 
 
 CTEST2(sdl2boot, test_sdl2boot_get_window) {
-    ASSERT_FAIL();
+    ASSERT_NOT_NULL(sdl2boot_get_window(&data->sdl2boot));
 }
 
 
 CTEST2(sdl2boot, test_sdl2boot_get_renderer) {
-    ASSERT_FAIL();
+    ASSERT_NOT_NULL(sdl2boot_get_renderer(&data->sdl2boot));
 }
 
 
 CTEST2(sdl2boot, test_sdl2boot_get_display_mode) {
-    ASSERT_FAIL();
+    const SDL_DisplayMode * display_mode = sdl2boot_get_display_mode(&data->sdl2boot);
+    ASSERT_NOT_NULL(display_mode);
+    ASSERT_NOT_EQUAL(0, display_mode->format);
+    ASSERT_TRUE(display_mode->w > 127);
+    ASSERT_TRUE(display_mode->h > 127);
 }
 
 
 CTEST2(sdl2boot, test_sdl2boot_get_render_width) {
-    ASSERT_FAIL();
+    ASSERT_TRUE(sdl2boot_get_render_width(&data->sdl2boot) > 127);
 }
 
 
 CTEST2(sdl2boot, test_sdl2boot_get_render_height) {
-    ASSERT_FAIL();
+    ASSERT_TRUE(sdl2boot_get_render_height(&data->sdl2boot) > 127);
 }
 
 

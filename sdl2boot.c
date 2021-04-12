@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-03-24 21:55
-// Version:      1.0.0-beta-1
+// Date:         2021-04-12 22:55
+// Version:      1.0.0-beta-2
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -43,8 +43,8 @@ const Sdl2BootConfig sdl2boot_config_default = {
 
 
 // Configure of SDL 2 boot from the template, or if NULL the defaults.
-void sdl2boot_config_template(Sdl2BootConfig * boot_config,
-                              const Sdl2BootConfig * template_boot_config)
+void sdl2boot_config_from_template(Sdl2BootConfig * boot_config,
+                                   const Sdl2BootConfig * template_boot_config)
 {
     assert (boot_config != NULL);
     memcpy(boot_config,

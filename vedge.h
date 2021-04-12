@@ -86,68 +86,11 @@ typedef struct VedgeState {
 } VedgeState;
 
 
-// Event handlers function pointer types.
-typedef struct VedgeContext VedgeContext;
-typedef void (*vedge_sdl2_common_handler)(VedgeContext * vedge, SDL_CommonEvent * common);
-typedef void (*vedge_sdl2_window_handler)(VedgeContext * vedge, SDL_WindowEvent * window);
-typedef void (*vedge_sdl2_keyboard_handler)(VedgeContext * vedge, SDL_KeyboardEvent * key);
-typedef void (*vedge_sdl2_textediting_handler)(VedgeContext * vedge, SDL_TextEditingEvent * edit);
-typedef void (*vedge_sdl2_textinput_handler)(VedgeContext * vedge, SDL_TextInputEvent * text);
-typedef void (*vedge_sdl2_mousemotion_handler)(VedgeContext * vedge, SDL_MouseMotionEvent * motion);
-typedef void (*vedge_sdl2_mousebutton_handler)(VedgeContext * vedge, SDL_MouseButtonEvent * button);
-typedef void (*vedge_sdl2_mousewheeel_handler)(VedgeContext * vedge, SDL_MouseWheelEvent * wheel);
-typedef void (*vedge_sdl2_joyaxis_handler)(VedgeContext * vedge, SDL_JoyAxisEvent * jaxis);
-typedef void (*vedge_sdl2_joyball_handler)(VedgeContext * vedge, SDL_JoyBallEvent * jball);
-typedef void (*vedge_sdl2_joyhat_handler)(VedgeContext * vedge, SDL_JoyHatEvent * jhat);
-typedef void (*vedge_sdl2_joybutton_handler)(VedgeContext * vedge, SDL_JoyButtonEvent * jbutton);
-typedef void (*vedge_sdl2_joydevice_handler)(VedgeContext * vedge, SDL_JoyDeviceEvent * jdevice);
-typedef void (*vedge_sdl2_controlleraxis_handler)(VedgeContext * vedge, SDL_ControllerAxisEvent * caxis);
-typedef void (*vedge_sdl2_controllerbutton_handler)(VedgeContext * vedge, SDL_ControllerButtonEvent * cbutton);
-typedef void (*vedge_sdl2_controllerdevice_handler)(VedgeContext * vedge, SDL_ControllerDeviceEvent * cdevice);
-typedef void (*vedge_sdl2_audiodevice_handler)(VedgeContext * vedge, SDL_AudioDeviceEvent * adevice);
-typedef void (*vedge_sdl2_quit_handler)(VedgeContext * vedge, SDL_QuitEvent * quit);
-typedef void (*vedge_sdl2_user_handler)(VedgeContext * vedge, SDL_UserEvent * user);
-typedef void (*vedge_sdl2_syswm_handler)(VedgeContext * vedge, SDL_SysWMEvent * syswm);
-typedef void (*vedge_sdl2_touchfinger_handler)(VedgeContext * vedge, SDL_TouchFingerEvent * tfinger);
-typedef void (*vedge_sdl2_multigesture_handler)(VedgeContext * vedge, SDL_MultiGestureEvent * mgesture);
-typedef void (*vedge_sdl2_dollargesture_handler)(VedgeContext * vedge, SDL_DollarGestureEvent * dgesture);
-typedef void (*vedge_sdl2_drop_handler)(VedgeContext * vedge, SDL_DropEvent * drop);
-
-
-typedef struct VedgeEventHandlers
-{
-vedge_sdl2_common_handler common_handler;
-vedge_sdl2_window_handler window_handler;
-vedge_sdl2_keyboard_handler key_handler;
-vedge_sdl2_textediting_handler edit_handler;
-vedge_sdl2_textinput_handler text_handler;
-vedge_sdl2_mousemotion_handler motion_handler;
-vedge_sdl2_mousebutton_handler button_handler;
-vedge_sdl2_mousewheeel_handler wheel_handler;
-vedge_sdl2_joyaxis_handler jaxis_handler;
-vedge_sdl2_joyball_handler jball_handler;
-vedge_sdl2_joyhat_handler jhat_handler;
-vedge_sdl2_joybutton_handler jbutton_handler;
-vedge_sdl2_joydevice_handler jdevice_handler;
-vedge_sdl2_controlleraxis_handler caxis_handler;
-vedge_sdl2_controllerbutton_handler cbutton_handler;
-vedge_sdl2_controllerdevice_handler cdevice_handler;
-vedge_sdl2_audiodevice_handler adevice_handler;
-vedge_sdl2_quit_handler quit_handler;
-vedge_sdl2_user_handler user_handler;
-vedge_sdl2_syswm_handler syswm_handler;
-vedge_sdl2_touchfinger_handler tfinger_handler;
-vedge_sdl2_multigesture_handler mgesture_handler;
-vedge_sdl2_dollargesture_handler dgesture_handler;
-vedge_sdl2_drop_handler drop_handler;
-} VedgeEventHandlers;
-
-
 // Engine context (access via API functions only or macros only).
 typedef struct VedgeContext {
     VedgeConfig config;
     VedgeState  state;
-    VedgeEventHandlers event_handlers;
+    //VedgeEventHandlers event_handlers;
 } VedgeContext;
 
 

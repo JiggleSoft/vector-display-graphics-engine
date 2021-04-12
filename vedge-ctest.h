@@ -79,7 +79,7 @@ CTEST(vedge, test_vedge_stuff) {
 
 
 //-----------------------------------------------------------------------------
-// Main Application Entry Point./.
+// Main Application Entry Point.
 //-----------------------------------------------------------------------------
 
 int main(int argc, const char *argv[])

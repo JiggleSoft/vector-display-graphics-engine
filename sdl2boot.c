@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-04-12 22:55
-// Version:      1.0.0-beta-2
+// Date:         2021-04-14 22:28
+// Version:      1.0.0-beta-3
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -144,6 +144,168 @@ bool sdl2boot_init(Sdl2BootContext * sdl2boot, const Sdl2BootConfig * boot_confi
                  sdl2boot->state.display_mode.refresh_rate,
                  sdl2boot->state.renderer_width, sdl2boot->state.renderer_height);
     return true;
+}
+
+
+static Sdl2BootEventResult sdl2boot_handle_events(Sdl2BootContext * sdl2boot);
+
+
+void sdl2boot_run(Sdl2BootContext * sdl2boot)
+{
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "sdl2boot_run: sdl2boot=%p\n", sdl2boot);
+    assert (sdl2boot != NULL);
+    Sdl2BootEventResult result = SDL2BOOT_OKAY;
+    while (result == SDL2BOOT_OKAY)
+    {
+        result = sdl2boot_handle_events(sdl2boot);
+    }
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "sdl2boot_run: completed.\n");
+}
+
+
+
+
+
+
+
+static Sdl2BootEventResult sdl2boot_handle_event(Sdl2BootContext * sdl2boot, const SDL_Event * event)
+{
+    assert (sdl2boot != NULL);
+    assert (event != NULL);
+    Sdl2BootEventHandlers * handlers = &sdl2boot->config.event_handlers;
+    switch (event->type)
+    {
+        case SDL_FIRSTEVENT:
+            break;
+        case SDL_QUIT:
+            if (handlers->quit_handler != NULL) {
+                return handlers->quit_handler(sdl2boot, (SDL_QuitEvent *)event);
+            } else {
+                return SDL2BOOT_QUIT;
+            }
+            break;
+        SDL_APP_TERMINATING:
+            break;
+        case SDL_APP_LOWMEMORY:
+//            if (handlers->handler != NULL) {
+//                handlers->quit_handler(vedge, (SDL_QuitEvent *)event);
+//            }
+            break;
+        case SDL_APP_WILLENTERBACKGROUND:
+            break;
+        case SDL_APP_DIDENTERBACKGROUND:
+            break;
+        case SDL_APP_WILLENTERFOREGROUND:
+            break;
+        case  SDL_APP_DIDENTERFOREGROUND:
+            break;
+        case   SDL_WINDOWEVENT:
+            if (handlers->window_handler != NULL) {
+                handlers->window_handler(sdl2boot, (SDL_WindowEvent *)event);
+            }
+            break;
+        case SDL_SYSWMEVENT:
+            break;
+        case SDL_KEYDOWN:
+            if (handlers->key_handler != NULL) {
+                handlers->key_handler(sdl2boot, (SDL_KeyboardEvent *)event);
+            }
+            break;
+        case SDL_KEYUP:
+            if (handlers->key_handler != NULL) {
+                handlers->key_handler(sdl2boot, (SDL_KeyboardEvent *)event);
+            }
+            break;
+        case SDL_TEXTEDITING:
+            break;
+        case SDL_TEXTINPUT:
+            break;
+        case SDL_KEYMAPCHANGED:
+            break;
+        case SDL_MOUSEMOTION:
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            break;
+        case SDL_MOUSEBUTTONUP:
+            break;
+        case SDL_MOUSEWHEEL:
+            break;
+        case SDL_JOYAXISMOTION:
+            break;
+        case SDL_JOYBALLMOTION:
+            if (handlers->jball_handler != NULL) {
+                handlers->jball_handler(sdl2boot, (SDL_JoyBallEvent *)event);
+            }
+            break;
+        case SDL_JOYHATMOTION:
+            if (handlers->jhat_handler != NULL) {
+                handlers->jhat_handler(sdl2boot, (SDL_JoyHatEvent *)event);
+            }
+            break;
+        case SDL_JOYBUTTONDOWN:
+            break;
+        case SDL_JOYBUTTONUP:
+            break;
+        case SDL_JOYDEVICEADDED:
+            break;
+        case SDL_JOYDEVICEREMOVED:
+            break;
+        case SDL_CONTROLLERAXISMOTION:
+            break;
+        case SDL_CONTROLLERBUTTONDOWN:
+            break;
+        case SDL_CONTROLLERBUTTONUP:
+            break;
+        case SDL_CONTROLLERDEVICEADDED:
+            break;
+        case SDL_CONTROLLERDEVICEREMOVED:
+            break;
+        case SDL_CONTROLLERDEVICEREMAPPED:
+            break;
+        case SDL_FINGERDOWN:
+            break;
+        case SDL_DOLLARGESTURE:
+            break;
+        case  SDL_CLIPBOARDUPDATE:
+            break;
+        case
+            SDL_DROPFILE:
+            break;
+        case SDL_DROPTEXT:
+            break;
+        case SDL_DROPBEGIN:
+            break;
+        case SDL_DROPCOMPLETE:
+            break;
+        case SDL_AUDIODEVICEADDED :
+            break;
+        case SDL_AUDIODEVICEREMOVED:
+            break;
+        case SDL_RENDER_TARGETS_RESET:
+            break;
+        case SDL_RENDER_DEVICE_RESET:
+            break;
+        default:
+            if (event->type >= SDL_USEREVENT) {
+                //handlers->u
+            } else {
+                // unknown
+            }
+    }
+}
+
+
+static Sdl2BootEventResult sdl2boot_handle_events(Sdl2BootContext * sdl2boot)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event) != 0)
+    {
+        Sdl2BootEventResult result = sdl2boot_handle_event(sdl2boot, &event);
+        if (result != SDL2BOOT_OKAY) {
+            return result;
+        }
+    }
+    return SDL2BOOT_OKAY;
 }
 
 

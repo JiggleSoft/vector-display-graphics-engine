@@ -7,8 +7,8 @@
 | ---------------- | ------ | -----------------------------------------------|
 | CMakeLists.txt   |  50%   | CMake build file. |
 | ctestx.h         | 100%   | Version 1.0.0-beta-2 |
-| sdl2boot.c       | 100%   | Version 1.0.0-beta-2 |
-| sdl2boot.h       | 100%   | Version 1.0.0-beta-2 |
+| sdl2boot.c       | 100%   | Version 1.0.0-beta-3 |
+| sdl2boot.h       | 100%   | Version 1.0.0-beta-3 |
 | sdl2boot-ctest.h |  50%   | Version 1.0.0-alpha-1 |
 | sdl2boot-tests.h |  50%   | Version 1.0.0-alpha-2 |
 | vmath.h          | 100%   | Version 1.0.0-beta-4 |

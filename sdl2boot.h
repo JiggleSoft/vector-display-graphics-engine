@@ -4,8 +4,8 @@
 // Platform:     Any supported by SDL version 2.
 // Language:     ANSI C99
 // Author:       Justin Lane (vedge@jigglesoft.co.uk)
-// Date:         2021-04-12 22:55
-// Version:      1.0.0-beta-2
+// Date:         2021-04-14 22:28
+// Version:      1.0.0-beta-3
 //-----------------------------------------------------------------------------
 // Copyright (c) 2021 Justin Lane
 //
@@ -61,37 +61,40 @@
 // Configuration, State, and Context Data Types.
 //-----------------------------------------------------------------------------
 
+// Event handler result enum type.
+typedef enum Sdl2BootEventResult { SDL2BOOT_OKAY, SDL2BOOT_QUIT } Sdl2BootEventResult;
+
 // Event handlers function pointer types.
-typedef struct VedgeContext VedgeContext;
-typedef void (*sdl2boot_common_handler)(VedgeContext * vedge, SDL_CommonEvent * common);
-typedef void (*sdl2boot_window_handler)(VedgeContext * vedge, SDL_WindowEvent * window);
-typedef void (*sdl2boot_keyboard_handler)(VedgeContext * vedge, SDL_KeyboardEvent * key);
-typedef void (*sdl2boot_textediting_handler)(VedgeContext * vedge, SDL_TextEditingEvent * edit);
-typedef void (*sdl2boot_textinput_handler)(VedgeContext * vedge, SDL_TextInputEvent * text);
-typedef void (*sdl2boot_mousemotion_handler)(VedgeContext * vedge, SDL_MouseMotionEvent * motion);
-typedef void (*sdl2boot_mousebutton_handler)(VedgeContext * vedge, SDL_MouseButtonEvent * button);
-typedef void (*sdl2boot_mousewheeel_handler)(VedgeContext * vedge, SDL_MouseWheelEvent * wheel);
-typedef void (*sdl2boot_joyaxis_handler)(VedgeContext * vedge, SDL_JoyAxisEvent * jaxis);
-typedef void (*sdl2boot_joyball_handler)(VedgeContext * vedge, SDL_JoyBallEvent * jball);
-typedef void (*sdl2boot_joyhat_handler)(VedgeContext * vedge, SDL_JoyHatEvent * jhat);
-typedef void (*sdl2boot_joybutton_handler)(VedgeContext * vedge, SDL_JoyButtonEvent * jbutton);
-typedef void (*sdl2boot_joydevice_handler)(VedgeContext * vedge, SDL_JoyDeviceEvent * jdevice);
-typedef void (*sdl2boot_controlleraxis_handler)(VedgeContext * vedge, SDL_ControllerAxisEvent * caxis);
-typedef void (*sdl2boot_controllerbutton_handler)(VedgeContext * vedge, SDL_ControllerButtonEvent * cbutton);
-typedef void (*sdl2boot_controllerdevice_handler)(VedgeContext * vedge, SDL_ControllerDeviceEvent * cdevice);
-typedef void (*sdl2boot_audiodevice_handler)(VedgeContext * vedge, SDL_AudioDeviceEvent * adevice);
-typedef void (*sdl2boot_quit_handler)(VedgeContext * vedge, SDL_QuitEvent * quit);
-typedef void (*sdl2boot_user_handler)(VedgeContext * vedge, SDL_UserEvent * user);
-typedef void (*sdl2boot_syswm_handler)(VedgeContext * vedge, SDL_SysWMEvent * syswm);
-typedef void (*sdl2boot_touchfinger_handler)(VedgeContext * vedge, SDL_TouchFingerEvent * tfinger);
-typedef void (*sdl2boot_multigesture_handler)(VedgeContext * vedge, SDL_MultiGestureEvent * mgesture);
-typedef void (*sdl2boot_dollargesture_handler)(VedgeContext * vedge, SDL_DollarGestureEvent * dgesture);
-typedef void (*sdl2boot_drop_handler)(VedgeContext * vedge, SDL_DropEvent * drop);
+typedef struct Sdl2BootContext Sdl2BootContext;
+typedef Sdl2BootEventResult (*sdl2boot_common_handler)(Sdl2BootContext * sdl2boot, SDL_CommonEvent * common);
+typedef Sdl2BootEventResult (*sdl2boot_window_handler)(Sdl2BootContext * sdl2boot, SDL_WindowEvent * window);
+typedef Sdl2BootEventResult (*sdl2boot_keyboard_handler)(Sdl2BootContext * sdl2boot, SDL_KeyboardEvent * key);
+typedef Sdl2BootEventResult (*sdl2boot_textediting_handler)(Sdl2BootContext * sdl2boot, SDL_TextEditingEvent * edit);
+typedef Sdl2BootEventResult (*sdl2boot_textinput_handler)(Sdl2BootContext * sdl2boot, SDL_TextInputEvent * text);
+typedef Sdl2BootEventResult (*sdl2boot_mousemotion_handler)(Sdl2BootContext * sdl2boot, SDL_MouseMotionEvent * motion);
+typedef Sdl2BootEventResult (*sdl2boot_mousebutton_handler)(Sdl2BootContext * sdl2boot, SDL_MouseButtonEvent * button);
+typedef Sdl2BootEventResult (*sdl2boot_mousewheeel_handler)(Sdl2BootContext * sdl2boot, SDL_MouseWheelEvent * wheel);
+typedef Sdl2BootEventResult (*sdl2boot_joyaxis_handler)(Sdl2BootContext * sdl2boot, SDL_JoyAxisEvent * jaxis);
+typedef Sdl2BootEventResult (*sdl2boot_joyball_handler)(Sdl2BootContext * sdl2boot, SDL_JoyBallEvent * jball);
+typedef Sdl2BootEventResult (*sdl2boot_joyhat_handler)(Sdl2BootContext * sdl2boot, SDL_JoyHatEvent * jhat);
+typedef Sdl2BootEventResult (*sdl2boot_joybutton_handler)(Sdl2BootContext * sdl2boot, SDL_JoyButtonEvent * jbutton);
+typedef Sdl2BootEventResult (*sdl2boot_joydevice_handler)(Sdl2BootContext * sdl2boot, SDL_JoyDeviceEvent * jdevice);
+typedef Sdl2BootEventResult (*sdl2boot_controlleraxis_handler)(Sdl2BootContext * sdl2boot, SDL_ControllerAxisEvent * caxis);
+typedef Sdl2BootEventResult (*sdl2boot_controllerbutton_handler)(Sdl2BootContext * sdl2boot, SDL_ControllerButtonEvent * cbutton);
+typedef Sdl2BootEventResult (*sdl2boot_controllerdevice_handler)(Sdl2BootContext * sdl2boot, SDL_ControllerDeviceEvent * cdevice);
+typedef Sdl2BootEventResult (*sdl2boot_audiodevice_handler)(Sdl2BootContext * sdl2boot, SDL_AudioDeviceEvent * adevice);
+typedef Sdl2BootEventResult (*sdl2boot_quit_handler)(Sdl2BootContext * sdl2boot, SDL_QuitEvent * quit);
+typedef Sdl2BootEventResult (*sdl2boot_user_handler)(Sdl2BootContext * sdl2boot, SDL_UserEvent * user);
+typedef Sdl2BootEventResult (*sdl2boot_syswm_handler)(Sdl2BootContext * sdl2boot, SDL_SysWMEvent * syswm);
+typedef Sdl2BootEventResult (*sdl2boot_touchfinger_handler)(Sdl2BootContext * sdl2boot, SDL_TouchFingerEvent * tfinger);
+typedef Sdl2BootEventResult (*sdl2boot_multigesture_handler)(Sdl2BootContext * sdl2boot, SDL_MultiGestureEvent * mgesture);
+typedef Sdl2BootEventResult (*sdl2boot_dollargesture_handler)(Sdl2BootContext * sdl2boot, SDL_DollarGestureEvent * dgesture);
+typedef Sdl2BootEventResult (*sdl2boot_drop_handler)(Sdl2BootContext * sdl2boot, SDL_DropEvent * drop);
 
 
+// Event handlers structure type.
 typedef struct Sdl2BootEventHandlers
 {
-    void * context_param;
     sdl2boot_common_handler common_handler;
     sdl2boot_window_handler window_handler;
     sdl2boot_keyboard_handler key_handler;
@@ -129,6 +132,8 @@ typedef struct Sdl2BootConfig {
     uint32_t window_flags;
     // Renderer creation flags.
     uint32_t renderer_flags;
+    // User data pointer.
+    void * user_data;
     // Event handlers.
     Sdl2BootEventHandlers event_handlers;
 } Sdl2BootConfig;
@@ -151,9 +156,7 @@ typedef struct Sdl2BootState {
     // Is the context initialised fully.
     bool initialised;
     // Is the context running.
-    bool running;
-    // Is the context to stop running.
-    bool quit;
+    volatile bool running;
 } Sdl2BootState;
 
 
@@ -188,6 +191,9 @@ void sdl2boot_config_primary_desktop(Sdl2BootConfig * boot_config,
 // If init fails sdl2boot_done(...) need not be called.
 // Returns true upon success, or false upon failure.
 bool sdl2boot_init(Sdl2BootContext * sdl2boot, const Sdl2BootConfig * boot_config);
+
+// Run the event handler loop.
+void sdl2boot_run(Sdl2BootContext * sdl2boot);
 
 // Clean-up and shutdown SDL2 including any resources that have been allocated.
 // Can be called more than once on any configured context.
